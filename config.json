@@ -1,0 +1,72 @@
+{
+    "name": "AsterKill",
+    "version": "1.0.0",
+    "window": {
+        "width": 1280,
+        "height": 720
+    },
+
+    "asteroid": {
+        "speed": {
+            "min": 0.5,
+            "max": 1.5
+        },
+        "rotate": {
+            "min": -3,
+            "max": 3
+        },
+        "types": [
+            {
+                "id": 1,
+                "score": 50,
+                "collision": 39
+            }, {
+                "id": 2,
+                "score": 100,
+                "collision": 24
+            }, {
+                "id": 3,
+                "score": 150,
+                "collision": 14
+            }
+        ],
+        "source": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "destonation": {
+            "min": 0.1,
+            "max": 0.9
+        },
+        "texture": {
+            "path": "assets/pics/aster.png",
+            "sprite_count": 6,
+            "types": [1, 1, 2, 2, 3, 3]
+        },
+        "spawn_time": {
+            "min": 300,
+            "max": 800
+        }
+    },
+    "font": {
+        "size": 22,
+        "path": "assets/fonts/atari.otf"
+    },
+    "player": {
+        "speed": 4.0,
+        "pos": {
+            "x": 0.5,
+            "y": 0.8
+        },
+        "borders": {
+            "left": 0.2,
+            "right": 0.8
+        },
+        "sprite": "assets/pics/spaceship.png"
+    },
+    "bullet": {
+        "speed": 3.0,
+        "cooldown": 500,
+        "sprite": "assets/pics/bullet.png"
+    }
+}
