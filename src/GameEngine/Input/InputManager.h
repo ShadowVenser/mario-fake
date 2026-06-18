@@ -34,13 +34,13 @@ class InputManager
     {
         for (auto& action: actionMap)
         {
-            if (action.second->Type() != ActionType::None)
+            if ((action.second->Type() == ActionType::End) || (action.second->Type() == ActionType::Moved))
                 action.second->Type() = ActionType::None;
         }
     }
 
     template<typename RightTypeEvent>
-    void _eventToKey(RightTypeEvent* event, sf::Keyboard::Key* key, SpecialInput* _ = nullptr)
+    void _eventToKey(RightTypeEvent* event, sf::Keyboard::Key* key, SpecialInput*)
     {
         *key = event->code;
     }

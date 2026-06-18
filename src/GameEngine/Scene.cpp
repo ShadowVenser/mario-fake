@@ -3,6 +3,12 @@
 #include "GameEngine.h"
 #include "Input/InputAction.h"
 
+Scene::Scene(GameEngine& engine): 
+    gameEngine(engine),
+    world(),
+    systemsManager(world)
+{ }
+
 std::shared_ptr<InputAction> Scene::RegisterAction(const std::string &name)
 {
     if (auto it = actionMap.find(name); it != actionMap.end())

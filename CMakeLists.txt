@@ -13,8 +13,8 @@ add_subdirectory(dependencies)
 add_subdirectory(src)
 
 file(COPY
-    src/Assets/
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/src)
+    src/assets/
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/src/assets)
 file(COPY
     config.json
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/src)

@@ -5,3 +5,5 @@ assets
 .idea
 .vs
 .vscode
+src/Sample/Components/AnimatorComponent.h
+src/Sample/Components/AnimationStateComponent.h

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../../Objects/Drawer.h"
+#include <memory>
+#include "SFML/Graphics/Sprite.hpp"
 
-struct SpriteComponent {
-    my_game::type type;
-    int sId = 0;
+struct SpriteComponent
+{
+    std::shared_ptr<sf::Sprite> sprite;
 };

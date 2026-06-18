@@ -1,10 +1,8 @@
-#ifndef POSITIONCOMPONENT_H
-#define POSITIONCOMPONENT_H
+#pragma once
+
+#include "SFML/System/Vector2.hpp"
 
 struct PositionComponent
 {
-    float X;
-    float Y;
+    sf::Vector2f pos;
 };
-
-#endif //POSITIONCOMPONENT_H

@@ -101,6 +101,8 @@ public:
     {
         _inputManager->RegisterInput(_currentScene, type, action);
     }
+
+    const auto& Cfg() const {return _config;}
 };
 
 #endif //GAMEENGINE_H

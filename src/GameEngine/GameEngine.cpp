@@ -16,6 +16,7 @@ void GameEngine::Render()
 }
 
 GameEngine::GameEngine(const GameEngineConfiguration& config):
+    _config(config),
     _window(
         sf::VideoMode({
             config.Width,
@@ -27,12 +28,15 @@ GameEngine::GameEngine(const GameEngineConfiguration& config):
     _currentScene(0)
 {
     _window.setFramerateLimit(config.framerate);
-    _window.setVerticalSyncEnabled(true);
+    _window.setVerticalSyncEnabled(true);\
+    _window.setKeyRepeatEnabled(false);
 
     if (!ImGui::SFML::Init(_window))
         throw std::runtime_error("Failed Dear ImGui Init!!!");
 
-    _assetManager.LoadFromFile(config.AssetsFile);
+    auto assetCfgPath = std::string{config.AssetsFile};
+
+    _assetManager.LoadFromFile(assetCfgPath);
     _inputManager = std::make_shared<InputManager>(_window, *this);
 }
 

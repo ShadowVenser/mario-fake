@@ -43,17 +43,35 @@ void InputManager::ProcessInput(const size_t scene)
     _releaseActions(_actionMouseMoveMaps[scene]);
     _releaseActions(_actionMouseWheelMaps[scene]);
 
+    for (auto& pair: _actionKeyMaps[scene])
+    {
+        if (sf::Keyboard::isKeyPressed(pair.first) || pair.second->Type() == ActionType::Start)
+        {
+            pair.second->Type() = ActionType::Pressed;
+        }
+    }
+
+    for (auto& pair: _actionMouseBtnMaps[scene])
+    {
+        if (sf::Mouse::isButtonPressed(pair.first) || pair.second->Type() == ActionType::Start)
+        {
+            pair.second->Type() = ActionType::Pressed;
+            pair.second->Vector() = sf::Mouse::getPosition();
+        }
+    }
+
     SpecialInput spec {-1, {-1, -1}};
 
     while (const std::optional event = _window.pollEvent()) 
     {
-        ImGui::SFML::ProcessEvent(_window, event);
+        if (event.has_value())
+            ImGui::SFML::ProcessEvent(_window, event.value());
 
         if (event->is<sf::Event::Closed>())
         {
             _gameEngine.Quit();
         }
-        if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+        else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
         {
             _processEvent(_actionKeyMaps[scene], keyPressed, ActionType::Start);
         }
@@ -76,23 +94,6 @@ void InputManager::ProcessInput(const size_t scene)
         else if (const auto* mouseMovedEvent = event->getIf<sf::Event::MouseMoved>())
         {
             _processEvent(_actionMouseMoveMaps[scene], mouseMovedEvent, ActionType::Moved, &spec);
-        }
-    }
-
-    for (auto& pair: _actionKeyMaps[scene])
-    {
-        if (sf::Keyboard::isKeyPressed(pair.first))
-        {
-            pair.second->Type() = ActionType::Pressed;
-        }
-    }
-
-    for (auto& pair: _actionMouseBtnMaps[scene])
-    {
-        if (sf::Mouse::isButtonPressed(pair.first))
-        {
-            pair.second->Type() = ActionType::Pressed;
-            pair.second->Vector() = sf::Mouse::getPosition();
         }
     }
 

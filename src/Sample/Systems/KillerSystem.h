@@ -14,5 +14,5 @@ public:
 
     void OnInit() override;
 
-    void OnUpdate() override;
+    void OnUpdate(float) override;
 };

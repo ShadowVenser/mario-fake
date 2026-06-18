@@ -1,20 +1,33 @@
 #ifndef GAMEENGINECONF_H
 #define GAMEENGINECONF_H
 
-#include <string>
+#include "nlohmann/json.hpp"
+
+#include <fstream>
+#include <string_view>
 #include <cstdint>
 
 // ToDo: Ваш аналог конфига, который читается из файла
 class GameEngineConfiguration
 {
+    using json = nlohmann::json;
 public:
-    static constexpr unsigned int Width = 1280;
-    static constexpr unsigned int Height = 768;
+    static constexpr unsigned int Width = 832;
+    static constexpr unsigned int Height = 576;
 
     static constexpr uint16_t framerate = 60;
 
-    static constexpr std::string AssetsPath = "Assets/";
-    static constexpr std::string AssetsFile = "assets.json";
+    static constexpr std::string_view AssetsFile = "assets/AssetConfig.json";
+    static constexpr std::string_view ConfigFile = "config.json";
+
+    json cfg;
+
+    GameEngineConfiguration()
+    {
+        std::ifstream f({ConfigFile.cbegin(), ConfigFile.cend()});
+        if (f.is_open())
+            cfg = json::parse(f);
+    }
 };
 
 #endif //GAMEENGINECONF_H
