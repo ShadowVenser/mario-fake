@@ -17,6 +17,8 @@ set(SOURCES
         Sample/Systems/DrawSystem.cpp
         Sample/Systems/KillerSystem.cpp
         Sample/Systems/MenuInitSystem.cpp
+
+        Sample/ButtonEvents.cpp
 )
 
 add_subdirectory(Ecs)

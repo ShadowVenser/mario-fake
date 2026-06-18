@@ -3,6 +3,20 @@
 
 void DrawSystem::OnUpdate(float)
 {
+    auto& camera =  
+        _cameraStorage.Count() > 0 ? 
+        _cameraStorage.All()[0] : 
+        CameraComponent{CameraType::Default, nullptr};
+
+    switch (camera.type) 
+    {
+        case CameraType::FollowX:
+            _engine.Window().setView(*camera.view);
+            break;
+        default:
+            _engine.Window().setView(_engine.Window().getDefaultView());
+    }
+    
     for (auto& id: _spritesStorage.Entities())
     {
         if (!world.IsEntityAlive(id))

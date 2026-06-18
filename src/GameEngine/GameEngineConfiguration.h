@@ -24,7 +24,7 @@ public:
 
     GameEngineConfiguration()
     {
-        std::ifstream f({ConfigFile.cbegin(), ConfigFile.cend()});
+        std::ifstream f(std::string{ConfigFile.cbegin(), ConfigFile.cend()});
         if (f.is_open())
             cfg = json::parse(f);
     }

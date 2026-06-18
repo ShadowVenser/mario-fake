@@ -1,8 +1,9 @@
 #include "MenuInitSystem.h"
 #include <memory>
 
-#include "../Components/SpriteComponent.h"
+#include "../Components/CameraComponent.h"
 #include "../Components/PositionComponent.h"
+#include "../Components/SpriteComponent.h"
 #include "../Components/TextComponent.h"
 
 #include "SFML/Graphics/Rect.hpp"
@@ -12,11 +13,17 @@
 void MenuInitSystem::OnInit()
 {
     _engine.Window().setTitle("MAIN MENU");
-
     
     auto& spritesStorage = world.GetStorage<SpriteComponent>();
     auto& posStorage = world.GetStorage<PositionComponent>();
     auto& textsStorage = world.GetStorage<TextComponent>();
+    auto& camerasStorage = world.GetStorage<CameraComponent>();
+
+    // ----- CAMEA INIT -----
+    _engine.Window().setView(_engine.Window().getDefaultView());
+    
+    auto camera = world.CreateEntity();
+    camerasStorage.Add(camera, {.type=CameraType::Default, .view=nullptr});
 
     // ----- BG INIT -----
 

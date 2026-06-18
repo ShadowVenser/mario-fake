@@ -7,27 +7,42 @@
             "Title": 
             {
                 "Font": "Title",
-                "Text": "SUPER RIN BROS",
+                "Text": "SUPER RIN SIS",
                 "Size": 85,
                 "Position":
                 {
                     "x": 0.5,
-                    "y": 0.20
+                    "y": 0.2
                 }
             },
             "Buttons":
             {
+                "Size":
+                {
+                    "x": 64, 
+                    "y": 25
+                },
                 "Play": 
                 {
                     "Idle": "PlayButtonIdle",
                     "Pressed": "PlayButtonPressed",
-                    "Choosed": "PlayButtonChoosed"
+                    "Choosed": "PlayButtonChoosed",
+                    "Position":
+                    {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
                 },
                 "Exit": 
                 {
                     "Idle": "ExitButtonIdle",
                     "Pressed": "ExitButtonPressed",
-                    "Choosed": "ExitButtonChoosed"
+                    "Choosed": "ExitButtonChoosed",
+                    "Position":
+                    {
+                        "x": 0.5,
+                        "y": 0.7
+                    }
                 }
             }
         }
