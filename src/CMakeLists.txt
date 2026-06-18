@@ -25,6 +25,20 @@ set(SOURCES main.cpp
         Objects/Randomiser.cpp
         Objects/Timer.cpp
         Objects/Gui.cpp
+
+        GameEngine/Input/InputManager.cpp
+        GameEngine/Input/InputManager.h
+        GameEngine/Input/InputAction.cpp
+        GameEngine/Input/InputAction.h
+        GameEngine/GameEngine.cpp
+        GameEngine/GameEngine.h
+        GameEngine/GameEngineConfiguration.h
+        GameEngine/Scene.cpp
+        GameEngine/Scene.h
+        GameEngine/Assets/AssetManager.cpp
+        GameEngine/Assets/AssetManager.h
+        GameEngine/Assets/Animation.cpp
+        GameEngine/Assets/Animation.h
 )
 
 add_subdirectory(Ecs)

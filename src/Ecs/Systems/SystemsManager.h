@@ -22,7 +22,7 @@ public:
     SystemsManager& AddSystem(std::shared_ptr<ISystem> system);
 
     void Initialize();
-    void Update();
+    void Update(float dt);
 };
 
 

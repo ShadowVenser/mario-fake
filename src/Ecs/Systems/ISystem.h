@@ -9,7 +9,7 @@ public:
     ISystem(World &world): IInitializer(world) {}
 
     ~ISystem() override = default;
-    virtual void OnUpdate() = 0;
+    virtual void OnUpdate(float dt) = 0;
 };
 
 #endif //ISYSTEM_H

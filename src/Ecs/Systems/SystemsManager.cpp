@@ -22,9 +22,9 @@ void SystemsManager::Initialize()
     _newInitializers.clear();
 }
 
-void SystemsManager::Update()
+void SystemsManager::Update(float dt)
 {
     Initialize();
     for (auto system: _systems)
-        system->OnUpdate();
+        system->OnUpdate(dt);
 }
