@@ -17,6 +17,9 @@ set(SOURCES
         Sample/Systems/DrawSystem.cpp
         Sample/Systems/KillerSystem.cpp
         Sample/Systems/MenuInitSystem.cpp
+        Sample/Systems/AnimationSystem.cpp
+        Sample/Systems/ButtonStateSystem.cpp
+        Sample/Systems/MenuInitSystem.cpp
 
         Sample/ButtonEvents.cpp
 )

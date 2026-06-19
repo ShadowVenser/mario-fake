@@ -1,10 +1,17 @@
 #include "MenuInitSystem.h"
 #include <memory>
+#include <unordered_map>
 
 #include "../Components/CameraComponent.h"
 #include "../Components/PositionComponent.h"
 #include "../Components/SpriteComponent.h"
 #include "../Components/TextComponent.h"
+#include "../Components/AnimationStateComponent.h"
+#include "../Components/AnimatorComponent.h"
+#include "../Components/ButtonComponent.h"
+#include "../Components/BoxColliderComponent.h"
+
+#include "../ButtonEvents.h"
 
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/Sprite.hpp"
@@ -81,4 +88,76 @@ void MenuInitSystem::OnInit()
         title,
         { centredPos }
     );
+
+    // ----- BUTTONS INIT -----
+
+    auto& aStatesStorage = world.GetStorage<AnimationStateComponent>();
+    auto& aDictStorage = world.GetStorage<AnimatorComponent>();
+    auto& buttonsStorage = world.GetStorage<ButtonComponent>();
+    auto& collidersStorage = world.GetStorage<BoxColliderComponent>();
+
+    auto bScale = _engine.Cfg().cfg["Scenes"]["Menu"]["Buttons"]["Scale"].get<float>();
+
+    sf::Vector2f bCSize = {
+        _engine.Cfg().cfg["Scenes"]["Menu"]["Buttons"]["CSize"]["x"].get<float>(),
+        _engine.Cfg().cfg["Scenes"]["Menu"]["Buttons"]["CSize"]["y"].get<float>(),
+    };
+    // ----- PLAY BUTTON INIT -----
+
+    auto bPlay = world.CreateEntity();
+    
+    buttonsStorage.Add(bPlay, {.OnClick = [&](){ quitButtonEvent(_engine); } });
+
+    aStatesStorage.Add(bPlay, AnimationStateComponent{
+        .currentState = AnimationNode::None,
+        .nextState = AnimationNode::Idle,
+        .isCycled = false,
+        .currentFrame = 0,
+        .timer = 0.f,
+        .isFinal = false
+    });
+
+    auto playButtonAnimations = std::make_shared<std::unordered_map<AnimationNode, const Animation*>>();
+
+    playButtonAnimations->insert( {
+        AnimationNode::Idle, 
+        _engine.Assets().GetAnimation(_engine.Cfg().cfg["Scenes"]["Menu"]["Buttons"]["Play"]["Idle"].get<std::string>())
+    });
+    playButtonAnimations->insert( {
+        AnimationNode::Choosed, 
+        _engine.Assets().GetAnimation(_engine.Cfg().cfg["Scenes"]["Menu"]["Buttons"]["Play"]["Choosed"].get<std::string>())
+    });
+    playButtonAnimations->insert( {
+        AnimationNode::Activated, 
+        _engine.Assets().GetAnimation(_engine.Cfg().cfg["Scenes"]["Menu"]["Buttons"]["Play"]["Pressed"].get<std::string>())
+    });
+
+    aDictStorage.Add(bPlay, AnimatorComponent{playButtonAnimations});
+
+    auto btnPlay = std::make_shared<sf::Sprite>((*playButtonAnimations)[AnimationNode::Idle]->GetTexture());
+    spritesStorage.Add(bPlay, {btnPlay});
+
+    btnPlay->setTextureRect({
+        {(*playButtonAnimations)[AnimationNode::Idle]->Offset()},
+        {(*playButtonAnimations)[AnimationNode::Idle]->Size()}
+    });
+
+    btnPlay->setOrigin({
+        0.5f * (*playButtonAnimations)[AnimationNode::Idle]->Size().x,
+        1.0f * (*playButtonAnimations)[AnimationNode::Idle]->Size().y
+    }); 
+
+    btnPlay->setScale({bScale, bScale});
+
+    collidersStorage.Add(bPlay, {
+        .w = bCSize.x * bScale,
+        .h = bCSize.y * bScale
+    });
+
+    posStorage.Add(bPlay, {
+        .pos = {
+            _engine.Cfg().cfg["Scenes"]["Menu"]["Buttons"]["Play"]["Position"]["x"].get<float>() * _engine.Window().getSize().x,
+            _engine.Cfg().cfg["Scenes"]["Menu"]["Buttons"]["Play"]["Position"]["y"].get<float>() * _engine.Window().getSize().y,
+        }
+    });
 }

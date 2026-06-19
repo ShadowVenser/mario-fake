@@ -8,5 +8,5 @@
 
 struct AnimatorComponent
 {
-    std::shared_ptr<std::unordered_map<AnimationNode, Animation&>> animations;
+    std::shared_ptr<std::unordered_map<AnimationNode, const Animation*>> animations;
 };

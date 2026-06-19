@@ -42,6 +42,10 @@ bool AssetManager::LoadFromFile(const std::string &path)
                 animationInfo.at("frameCount").get<size_t>(),
                 animationInfo.at("frameDuration").get<size_t>(),
                 {
+                    animationInfo.value("/size/x"_json_pointer, 0),
+                    animationInfo.value("/size/y"_json_pointer, 0)
+                },
+                {
                     animationInfo.value("/offset/x"_json_pointer, 0),
                     animationInfo.value("/offset/y"_json_pointer, 0)
                 },
@@ -89,6 +93,7 @@ bool AssetManager::AddAnimation
     const std::string &textureName, 
     const size_t frameCount,
     const size_t frameDuration,
+    const sf::Vector2i& size, 
     const sf::Vector2i& offset = {0, 0},
     const std::string& path = NONE_PATH
 )
@@ -119,6 +124,7 @@ bool AssetManager::AddAnimation
             it->second,
             frameCount,
             frameDuration,
+            size,
             offset
         }
     });

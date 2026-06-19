@@ -11,17 +11,10 @@ Scene::Scene(GameEngine& engine):
 
 std::shared_ptr<InputAction> Scene::RegisterAction(const std::string &name)
 {
-    if (auto it = actionMap.find(name); it != actionMap.end())
-    {
-        return it->second;
-    }
+    auto ptr = std::make_shared<InputAction>(name);
+    actionMap[name] = ptr;
 
-    auto it = actionMap.insert({
-        name,
-        std::make_shared<InputAction>(name)
-    }).first;
-
-    return it->second;
+    return ptr;
 }
 
 void Scene::RegisterAction(const sf::Keyboard::Key key, const std::string& name)

@@ -21,7 +21,8 @@ public:
     (
         const sf::Texture& texture, 
         const size_t frameCount, 
-        const size_t frameDuration, 
+        const size_t frameDuration,
+        const sf::Vector2i& size,  
         const sf::Vector2i& offset
     );
 

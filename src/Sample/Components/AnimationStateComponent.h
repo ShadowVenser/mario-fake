@@ -1,15 +1,19 @@
 #pragma once 
 
-enum class AnimationGraph { Button };
-enum class AnimationNode { Idle, Pressed, Choosed };
+#include <cstddef>
+
+enum class AnimationNode { Idle, Pressed, Choosed, Activated, None };
 
 struct AnimationStateComponent
 {
-    AnimationGraph graph;
-    
     AnimationNode currentState;
     AnimationNode nextState;
 
-    int currentFrame;
+    bool isCycled;
+
+    size_t currentFrame;
     float timer;
+
+    bool isFinal;
+
 };

@@ -2,6 +2,7 @@
 
 #include "Assets/AssetManager.h"
 #include "Input/InputManager.h"
+#include "SFML/Graphics/Color.hpp"
 #include "SFML/Window/VideoMode.hpp"
 
 #include <imgui-SFML.h>
@@ -51,7 +52,7 @@ void GameEngine::Run()
 
     while (_isRunning)
     {
-        _window.clear();
+        _window.clear(sf::Color(_config.cfg.value("ClearColor", static_cast<uint32_t>(0))));
 
         auto dt = _deltaClock.restart();
         ImGui::SFML::Update(_window, dt);

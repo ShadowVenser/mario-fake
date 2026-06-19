@@ -7,6 +7,7 @@
 
 #include "Animation.h"
 #include "SFML/Graphics/Sprite.hpp"
+#include "SFML/System/Vector2.hpp"
 
 class AssetManager {
     std::unordered_map<std::string, sf::Texture> _textures;
@@ -26,6 +27,7 @@ public:
         const std::string& textureName, 
         size_t frameCount, 
         size_t frameDuration, 
+        const sf::Vector2i& size,
         const sf::Vector2i& offset, 
         const std::string& path
     );
