@@ -13,13 +13,18 @@ set(SOURCES
         Sample/Components/SpriteComponent.h
 
         Sample/Scenes/MenuScene.cpp
+        Sample/Scenes/GameScene.cpp
 
         Sample/Systems/DrawSystem.cpp
         Sample/Systems/KillerSystem.cpp
         Sample/Systems/MenuInitSystem.cpp
         Sample/Systems/AnimationSystem.cpp
         Sample/Systems/ButtonStateSystem.cpp
-        Sample/Systems/MenuInitSystem.cpp
+
+        Sample/Systems/GameInitSystem.cpp
+        Sample/Systems/MoveInputSystem.cpp
+        Sample/Systems/MoveSystem.cpp
+        Sample/Systems/ShowGridSystem.cpp
 
         Sample/ButtonEvents.cpp
 )

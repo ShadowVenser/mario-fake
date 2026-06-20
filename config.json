@@ -1,4 +1,5 @@
 {
+    "ClearColor": 1684340480,
     "Scenes":
     {
         "Menu":
@@ -30,8 +31,8 @@
                     "Choosed": "PlayButtonChoosed",
                     "Position":
                     {
-                        "x": 0.5,
-                        "y": 0.5
+                        "x": 0.25,
+                        "y": 0.75
                     }
                 },
                 "Exit": 
@@ -41,11 +42,49 @@
                     "Choosed": "ExitButtonChoosed",
                     "Position":
                     {
-                        "x": 0.5,
-                        "y": 0.7
+                        "x": 0.75,
+                        "y": 0.75
                     }
                 }
             }
+        },
+        "Game":
+        {
+            "Entities":
+            {
+                "Player": {
+                    "PlayerComponent":{
+                        "JumpSpeed": 3.0
+                    },
+                    "MovementComponent":{
+                        "BaseSpeed": 2.0
+                    },
+                    "Texture" : "question",
+                    "Collider" : {}
+                },
+                "Brick" : {
+                    "Texture" : "brick"
+                },
+                "Tile" : {
+                    "Texture" : "tile"
+                },
+                "Question" : {
+                    "Texture" : "question"
+                },
+                "Finish" : {
+                    "Texture" : "finish"
+                }
+            },
+            "Grid": 
+            {
+                "TileSize": 64,
+                "Text":
+                {
+                    "Font": "Title",
+                    "Size": 12
+                }
+            }
+            
         }
     }
 }

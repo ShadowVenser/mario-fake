@@ -18,6 +18,7 @@ public:
     static constexpr uint16_t framerate = 60;
 
     static constexpr std::string_view AssetsFile = "assets/AssetConfig.json";
+    static constexpr std::string_view LevelFile = "assets/level.json";
     static constexpr std::string_view ConfigFile = "config.json";
 
     json cfg;
