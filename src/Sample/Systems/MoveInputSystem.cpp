@@ -6,14 +6,14 @@ void MoveInputSystem::OnUpdate(float) {
 
 
     MovementComponent* move;
-    PlayerComponent* player;
+    BaseSpeedComponent* baseSpeed;
 
     for (auto& id: _playerStorage.Entities())
     {
         if (!world.IsEntityAlive(id))
             continue;
         move = &_moveStorage[id];
-        player = &_playerStorage[id];
+        baseSpeed = &_baseSpeedStorage[id];
         break;
     }
 
@@ -32,8 +32,8 @@ void MoveInputSystem::OnUpdate(float) {
     }
 
     
-    float gridSize = static_cast<float>(_engine.Cfg().cfg["Scenes"]["Game"]["Grid"]["TileSize"].get<int>());         // домножаем, чтобы скорость была в клетках, иначе они очень смешно ползут
+    // домножение на gridsize вшито в базовые скорости в gameInit
 
-    move->xSpeed = move->baseSpeed * xDir * gridSize;
-    move->ySpeed = player->jumpInitialSpeed * yDir * gridSize;      // -, потому что на самом деле вверх = в минус
+    move->xSpeed = baseSpeed->moveSpeed * xDir;
+    move->ySpeed = baseSpeed->jumpInitial * yDir;      // -, потому что на самом деле вверх = в минус
 }

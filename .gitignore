@@ -5,3 +5,6 @@ assets
 .idea
 .vs
 .vscode
+dependencies/CMakeLists.txt
+src/для тупых
+src/CMakeLists.txt

@@ -9,6 +9,8 @@
 #include "../Components/PositionComponent.h"
 #include "../Components/MovementComponent.h"
 #include "../Components/PlayerComponent.h"
+#include "../Components/BaseSpeedComponent.h"
+#include "../Components/BoxColliderComponent.h"
 #include "../Components/TextComponent.h"
 
 #include "SFML/Graphics/Rect.hpp"
@@ -24,8 +26,10 @@ void GameInitSystem::OnInit()
     
     auto& spritesStorage = world.GetStorage<SpriteComponent>();
     auto& playerStorage = world.GetStorage<PlayerComponent>();
+    auto& baseSpeedStorage = world.GetStorage<BaseSpeedComponent>();
     auto& moveStorage = world.GetStorage<MovementComponent>();
     auto& posStorage = world.GetStorage<PositionComponent>();
+    auto& colliderStorage = world.GetStorage<BoxColliderComponent>();
     // auto& textsStorage = world.GetStorage<TextComponent>();
     auto& camerasStorage = world.GetStorage<CameraComponent>();
 
@@ -43,7 +47,7 @@ void GameInitSystem::OnInit()
         const auto& gameSceneJson = _engine.Cfg().cfg["Scenes"]["Game"];
 
         auto tileSize = gameSceneJson["Grid"]["TileSize"].get<unsigned int>();
-
+        auto fTileSize = static_cast<float>(tileSize);
 
         std::map<std::string, std::shared_ptr<sf::Sprite>> spriteMap = {};        
         for (const auto &pair : gameSceneJson["Entities"].items()) {                     // автоматическая подгрузка спрайтов        // и тут я понял, что я долбоеб, потому что она у тебя уже есть в ассетах; с другой стороны, ты тоже долбоеб, потому что возвращаешь ссыль, а не shared_ptr
@@ -80,10 +84,19 @@ void GameInitSystem::OnInit()
                 spritesStorage.Add(newEntity, {.sprite = spriteMap[name]});
             }
             if (entityJson.contains("PlayerComponent")){
-                playerStorage.Add(newEntity, {.jumpInitialSpeed = entityJson["PlayerComponent"]["JumpSpeed"].get<float>()});
+                playerStorage.Add(newEntity, {});
+            }
+            if (entityJson.contains("BaseSpeed")){
+                baseSpeedStorage.Add(
+                    newEntity, 
+                    {
+                        .moveSpeed = entityJson["BaseSpeed"]["MoveSpeed"].get<float>() * fTileSize,
+                        .jumpInitial = entityJson["BaseSpeed"]["JumpInitial"].get<float>() * fTileSize
+                    }
+                );
             }
             if (entityJson.contains("MovementComponent")){
-                moveStorage.Add(newEntity, {.baseSpeed = entityJson["MovementComponent"]["BaseSpeed"].get<float>()});
+                moveStorage.Add(newEntity, {});
             }
 
             ///////////////// Системы коллайдеров нет, но вот тебе заглушка, чтобы было, с чем работать; 
@@ -91,10 +104,10 @@ void GameInitSystem::OnInit()
             // предположительно я бы въебал флаг на физику (стопает ли движение, или пуля и похуй) + оффсет от центра
             // оффсет в целом можешь динамически вычислять, спизди из этого файла на ctrl+f "setOrigin" и замени sptSize.x на w и sptSize.y на h
 
-            // if (entityJson.contains("Collider")){  
-            //     auto size = spriteMap[name]->getTexture().getSize();
-            //     moveStorage.Add(newEntity, {size.x, size.y});
-            // }
+            if (entityJson.contains("Collider")){  
+                auto size = spriteMap[name]->getTexture().getSize();
+                colliderStorage.Add(newEntity, {static_cast<float>(size.x), static_cast<float>(size.y)});
+            }
 
 
             // ДОБАВЛЯТЬ НОВЫЕ КОМПОНЕНТЫ СЮДА

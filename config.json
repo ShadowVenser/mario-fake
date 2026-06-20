@@ -53,12 +53,12 @@
             "Entities":
             {
                 "Player": {
-                    "PlayerComponent":{
-                        "JumpSpeed": 3.0
+                    "PlayerComponent":{},
+                    "BaseSpeed": {
+                        "MoveSpeed": 2.0,
+                        "JumpInitial": 3.0
                     },
-                    "MovementComponent":{
-                        "BaseSpeed": 2.0
-                    },
+                    "MovementComponent":{},
                     "Texture" : "question",
                     "Collider" : {}
                 },
