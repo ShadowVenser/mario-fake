@@ -55,24 +55,29 @@
                 "Player": {
                     "PlayerComponent":{},
                     "BaseSpeed": {
-                        "MoveSpeed": 2.0,
-                        "JumpInitial": 3.0
+                        "MoveSpeed": 3.0,
+                        "JumpInitial": 4.0
                     },
                     "MovementComponent":{},
+                    "Gravity": 5.0,
                     "Texture" : "question",
                     "Collider" : {}
                 },
                 "Brick" : {
-                    "Texture" : "brick"
+                    "Texture" : "brick",
+                    "Collider" : {}
                 },
                 "Tile" : {
-                    "Texture" : "tile"
+                    "Texture" : "tile",
+                    "Collider" : {}
                 },
                 "Question" : {
-                    "Texture" : "question"
+                    "Texture" : "question",
+                    "Collider" : {}
                 },
                 "Finish" : {
-                    "Texture" : "finish"
+                    "Texture" : "finish",
+                    "Collider" : {}
                 }
             },
             "Grid": 

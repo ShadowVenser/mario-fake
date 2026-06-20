@@ -5,6 +5,8 @@
 #include "../Systems/GameInitSystem.h"
 #include "../Systems/ShowGridSystem.h"
 #include "../Systems/MoveInputSystem.h"
+#include "../Systems/FallingSystem.h"
+#include "../Systems/ColliderSystem.h"
 #include "../Systems/MoveSystem.h"
 
 #include "../Systems/DrawSystem.h"
@@ -12,10 +14,13 @@
 
 GameScene::GameScene(GameEngine& engine): Scene(engine)
 {
+    float tileSize = static_cast<float>(engine.Cfg().cfg["Scenes"]["Game"]["Grid"]["TileSize"].get<unsigned int>());
     systemsManager.AddInitializer(std::make_shared<GameInitSystem>(world, engine));
 
     systemsManager.AddSystem(std::make_shared<MoveInputSystem>(world, engine, actionMap));
-    systemsManager.AddSystem(std::make_shared<MoveSystem>(world));//, engine, actionMap));
+    systemsManager.AddSystem(std::make_shared<FallingSystem>(world));     // после пользовательского ввода
+    systemsManager.AddSystem(std::make_shared<ColliderSystem>(world, tileSize));             // строго до MoveSystem и после ввода всех передвижений
+    systemsManager.AddSystem(std::make_shared<MoveSystem>(world));
 
     systemsManager.AddSystem(std::make_shared<DrawSystem>(world, engine));
     systemsManager.AddSystem(std::make_shared<ShowGridSystem>(world, engine));       // должна быть после draw, чтобы рисовать поверх

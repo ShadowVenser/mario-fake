@@ -11,6 +11,7 @@
 #include "../Components/PlayerComponent.h"
 #include "../Components/BaseSpeedComponent.h"
 #include "../Components/BoxColliderComponent.h"
+#include "../Components/GravityComponent.h"
 #include "../Components/TextComponent.h"
 
 #include "SFML/Graphics/Rect.hpp"
@@ -28,6 +29,7 @@ void GameInitSystem::OnInit()
     auto& playerStorage = world.GetStorage<PlayerComponent>();
     auto& baseSpeedStorage = world.GetStorage<BaseSpeedComponent>();
     auto& moveStorage = world.GetStorage<MovementComponent>();
+    auto& gravityStorage = world.GetStorage<GravityComponent>();
     auto& posStorage = world.GetStorage<PositionComponent>();
     auto& colliderStorage = world.GetStorage<BoxColliderComponent>();
     // auto& textsStorage = world.GetStorage<TextComponent>();
@@ -107,6 +109,9 @@ void GameInitSystem::OnInit()
             if (entityJson.contains("Collider")){  
                 auto size = spriteMap[name]->getTexture().getSize();
                 colliderStorage.Add(newEntity, {static_cast<float>(size.x), static_cast<float>(size.y)});
+            }
+            if (entityJson.contains("Gravity")){  
+                gravityStorage.Add(newEntity, {entityJson["Gravity"].get<float>() * fTileSize});
             }
 
 

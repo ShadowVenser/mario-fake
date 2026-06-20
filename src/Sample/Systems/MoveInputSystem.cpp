@@ -19,7 +19,7 @@ void MoveInputSystem::OnUpdate(float) {
 
     float xDir = 0.f;
     float yDir = 0.f;
-    bool onGround = move->ySpeed == 0.f; // тупо + так не работают рампы, но а нам не пофиг ли?
+    bool onGround = move->ySpeed < 1.f && move->ySpeed > -1.f; // тупо + так не работают рампы, но а нам не пофиг ли?
 
     if (_inputMap["Jump"]->Type()==ActionType::Start) {
         yDir += onGround? -1.f : 0.f;
@@ -35,5 +35,5 @@ void MoveInputSystem::OnUpdate(float) {
     // домножение на gridsize вшито в базовые скорости в gameInit
 
     move->xSpeed = baseSpeed->moveSpeed * xDir;
-    move->ySpeed = baseSpeed->jumpInitial * yDir;      // -, потому что на самом деле вверх = в минус
+    move->ySpeed += baseSpeed->jumpInitial * yDir;     
 }
