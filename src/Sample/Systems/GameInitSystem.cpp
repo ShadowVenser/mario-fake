@@ -98,17 +98,22 @@ void GameInitSystem::OnInit()
                 );
             }
             if (entityJson.contains("MovementComponent")){
-                moveStorage.Add(newEntity, {});
+                if (entityJson["MovementComponent"].contains("MaxSpeed")){
+                    moveStorage.Add(newEntity, { entityJson["MovementComponent"]["MaxSpeed"].get<float>()});
+                } else{
+                    moveStorage.Add(newEntity, {});
+                }
             }
-
-            ///////////////// Системы коллайдеров нет, но вот тебе заглушка, чтобы было, с чем работать; 
-            //я бы жестко поменял внутренности коллайдера сам, но это твой код, без тебя не полезу;
-            // предположительно я бы въебал флаг на физику (стопает ли движение, или пуля и похуй) + оффсет от центра
-            // оффсет в целом можешь динамически вычислять, спизди из этого файла на ctrl+f "setOrigin" и замени sptSize.x на w и sptSize.y на h
 
             if (entityJson.contains("Collider")){  
                 auto size = spriteMap[name]->getTexture().getSize();
-                colliderStorage.Add(newEntity, {static_cast<float>(size.x), static_cast<float>(size.y)});
+                int width = size.x;
+                int height = size.y;
+                if (entityJson["Collider"].contains("W")){
+                    width = entityJson["Collider"]["Width"].get<unsigned int>();
+                    height = entityJson["Collider"]["Height"].get<unsigned int>();
+                }
+                colliderStorage.Add(newEntity, {static_cast<float>(width), static_cast<float>(height)});
             }
             if (entityJson.contains("Gravity")){  
                 gravityStorage.Add(newEntity, {entityJson["Gravity"].get<float>() * fTileSize});

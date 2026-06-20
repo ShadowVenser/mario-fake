@@ -58,6 +58,17 @@ void ColliderSystem::OnUpdate(float t) {
                 bb2y1,
                 bb2y2
             )){
+                if (_bulletStorage.Has(id1) || _finishStorage.Has(id2)){ // единственные два случая, когда коллизии проходят насквозь. Да, можно спамить коллижнэвентами при любой коллизии, но это в среднем 1-2 раза в кадр, тоесть нет
+                    if (!_playerStorage.Has(id2)){ // мы не хотим долбиться в пули, но умирать об пули тоже не хочется
+                        const auto newEntity = world.CreateEntity();
+                        _collisionStorage.Add(newEntity, {id1, id2});
+                    }
+                    continue;
+                }
+                if (_bulletStorage.Has(id2)){ //опять же, не долбиться в пули
+                    continue;
+                }
+
                 if (nearZero(bb1x2-bb2x1) && move1.xSpeed > 0.f || nearZero(bb1x2-bb2x1) && move1.xSpeed < 0.f){
                     move1.xSpeed = 0.f;
                     continue;
@@ -79,6 +90,10 @@ void ColliderSystem::OnUpdate(float t) {
                     bb2x1,
                     bb2x2
                 )){
+                    if (move1.ySpeed<0 && _playerStorage.Has(id1)){ // ударились головой
+                        const auto newEntity = world.CreateEntity();
+                        _collisionStorage.Add(newEntity, {id1, id2});
+                    }
                     move1.ySpeed = ((bb1y1 < bb2y1)? (bb2y1-bb1y2) : (bb2y2-bb1y1)) / t;
                 } else {
 
@@ -92,6 +107,10 @@ void ColliderSystem::OnUpdate(float t) {
                     )) {
                         move1.xSpeed = newxSpeed;
                     } else {
+                        if (move1.ySpeed<0 && _playerStorage.Has(id1)){ // ударились головой
+                            const auto newEntity = world.CreateEntity();
+                            _collisionStorage.Add(newEntity, {id1, id2});
+                        }
                         //std::cout<<"y угол "<<bb1x1/64<<" "<<bb1x2/64<<" "<<bb1y1/64<<" "<<bb1y2/64<<" / "<<bb1x1/64+move1.xSpeed*t/64<<" "<<bb1x2/64+move1.xSpeed*t/64<<" "<<bb1y1/64+move1.ySpeed*t/64<<" "<<bb1y2/64+move1.ySpeed*t/64<<" / "<<bb1x1/64+newxSpeed*t/64<<" "<<bb1x2/64+newxSpeed*t/64<<" "<<bb1y1/64 + newySpeed*t/64<<" "<<bb1y2/64+newySpeed*t/64<<" | "<<bb2x1/64<<" "<<bb2x2/64<<" "<<bb2y1/64<<" "<<bb2y2/64<<" \n";
                         move1.ySpeed = ((bb1y1 < bb2y1)? (bb2y1-bb1y2) : (bb2y2-bb1y1)) / t;
                     }   

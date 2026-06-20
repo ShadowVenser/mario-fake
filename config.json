@@ -56,12 +56,27 @@
                     "PlayerComponent":{},
                     "BaseSpeed": {
                         "MoveSpeed": 3.0,
-                        "JumpInitial": 4.0
+                        "JumpInitial": 12.0
                     },
-                    "MovementComponent":{},
-                    "Gravity": 5.0,
+                    "MovementComponent":{
+                        "MaxSpeed": 15.0
+                    },
+                    "Gravity": 12.0,
                     "Texture" : "question",
-                    "Collider" : {}
+                    "Collider" : {
+                        "Width": 40,
+                        "Height": 64
+                    }
+                },
+                "Bullet" : {
+                    "Texture" : "tile",
+                    "Collider" : {},
+                    "MovementComponent" : {
+                        "XSpeed" : 10.0, 
+                        "YSpeed" : 0.0
+                    },
+                    "SpawnHeightOffset": 0,
+                    "Cooldown": 0.5
                 },
                 "Brick" : {
                     "Texture" : "brick",
