@@ -9,7 +9,7 @@ void FinishSystem::OnUpdate(float) {
         if (!world.IsEntityAlive(collision.id1) || !world.IsEntityAlive(collision.id2))
             continue;
         if (_playerStorage.Has(collision.id1) && _finishStorage.Has(collision.id2)){
-            _engine.ChangeScene<MenuScene>(_engine);
+            _engine.LoadScene<MenuScene>(_engine);
         }
     }
 }

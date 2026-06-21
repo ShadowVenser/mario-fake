@@ -10,6 +10,8 @@
 #include "../Systems/MoveSystem.h"
 #include "../Systems/ShootingSystem.h"
 #include "../Systems/FinishSystem.h"
+#include "../Systems/OutOfBoundsSystem.h"
+#include "../Systems/RespawnSystem.h"
 #include "../Systems/AdditionalControlSystem.h"
 
 #include "../Systems/DrawSystem.h"
@@ -32,13 +34,16 @@ GameScene::GameScene(GameEngine& engine): Scene(engine)
     systemsManager.AddSystem(std::make_shared<AdditionalControlSystem>(world, engine, actionMap)); // ничего не требует и дропает сцену
 
     systemsManager.AddSystem(std::make_shared<ShootingSystem>(world, actionMap, bulletSpeedX, bulletSpeedY, bulletSprite, heightOffset, cooldown));
-    
+
     systemsManager.AddSystem(std::make_shared<MoveInputSystem>(world, actionMap));
     systemsManager.AddSystem(std::make_shared<FallingSystem>(world));                     // после пользовательского ввода
     systemsManager.AddSystem(std::make_shared<ColliderSystem>(world, tileSize));             // строго до MoveSystem и после ввода всех передвижений
     systemsManager.AddSystem(std::make_shared<MoveSystem>(world));
 
     systemsManager.AddSystem(std::make_shared<FinishSystem>(world, engine));          // после коллайдера
+
+    systemsManager.AddSystem(std::make_shared<OutOfBoundsSystem>(world, static_cast<float>(engine.Window().getSize().y))); 
+    systemsManager.AddSystem(std::make_shared<RespawnSystem>(world, engine));    // прямо перед killerSystem
 
     systemsManager.AddSystem(std::make_shared<DrawSystem>(world, engine));
     systemsManager.AddSystem(std::make_shared<ShowGridSystem>(world, engine));       // должна быть после draw, чтобы рисовать поверх
