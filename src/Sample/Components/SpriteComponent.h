@@ -6,4 +6,5 @@
 struct SpriteComponent
 {
     std::shared_ptr<sf::Sprite> sprite;
+    bool visible = true;
 };

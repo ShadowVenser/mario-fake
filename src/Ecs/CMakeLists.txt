@@ -16,6 +16,6 @@ target_compile_definitions(${LIB_NAME} PUBLIC -DDEBUG)
 
 target_compile_features(${LIB_NAME} PUBLIC cxx_std_20)
 
-# target_compile_options(${LIB_NAME} PUBLIC -Wall -Wextra -Wpedantic -Werror)
+target_compile_options(${LIB_NAME} PUBLIC -Wall -Wextra -Wpedantic -Werror)
 # target_compile_options(${LIB_NAME} PUBLIC -g3 -O0)
 target_compile_options(${LIB_NAME} PRIVATE -Ofast)

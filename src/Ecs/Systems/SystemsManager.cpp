@@ -8,6 +8,7 @@ SystemsManager& SystemsManager::AddInitializer(std::shared_ptr<IInitializer> ini
 
 SystemsManager& SystemsManager::AddSystem(std::shared_ptr<ISystem> system)
 {
+    AddInitializer(system);
     _systems.push_back(system);
     return *this;
 }

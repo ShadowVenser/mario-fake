@@ -107,11 +107,23 @@
                     "Size": 12
                 }
             },
-            "Camera": {
+            "Camera": 
+            {
                 "SpeedCoef" : 13.0,
                 "SlowDownCoef" : 0.90
+            },
+            "Pause":
+            {
+                "Cooldown": 0.3,
+                "Color": "#00000057",
+                "Text": 
+                {
+                    "Font": "Basic",
+                    "Text": "Pause",
+                    "Size": 85,
+                    "Color": "#FFFFFFFF"
+                }
             }
-            
         }
     }
 }

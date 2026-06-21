@@ -15,12 +15,26 @@
 #include "../Systems/RespawnSystem.h"
 #include "../Systems/AdditionalControlSystem.h"
 #include "../Systems/CameraFollowXSystem.h"
+#include "../Systems/PauseSystem.h"
 
 #include "../Systems/DrawSystem.h"
 #include "../Systems/KillerSystem.h"
 
-GameScene::GameScene(GameEngine& engine): Scene(engine)
+GameScene::GameScene(GameEngine& engine): 
+    Scene(engine), 
+    basicSystemManager(systemsManager), 
+    pausableSystemManager(world), 
+    graphicsSystemManager(world),
+    _onPause(false)
 {
+    RegisterAction(sf::Keyboard::Key::W, "Jump");           //MoveInputSystem
+    RegisterAction(sf::Keyboard::Key::A, "Left");           //MoveInputSystem
+    RegisterAction(sf::Keyboard::Key::D, "Right");          //MoveInputSystem
+    RegisterAction(sf::Keyboard::Key::Space, "Shoot");      //ShootingSystem
+    RegisterAction(sf::Keyboard::Key::Escape, "Menu");      //AdditionalControlSystem
+    RegisterAction(sf::Keyboard::Key::P, "Pause");          //AdditionalControlSystem, пока нереализованная заглушка
+    
+
     auto& gameCfg = engine.Cfg().cfg["Scenes"]["Game"];
     float tileSize = static_cast<float>(gameCfg["Grid"]["TileSize"].get<unsigned int>());
     float bulletSpeedX = gameCfg["Entities"]["Bullet"]["MovementComponent"]["XSpeed"].get<float>() * tileSize;
@@ -31,43 +45,47 @@ GameScene::GameScene(GameEngine& engine): Scene(engine)
     // ваще говоря у системы есть инициализатор, и по-хорошему это туда запихать, но я уже сделал так
     float cameraSpeedCoef = gameCfg["Camera"]["SpeedCoef"].get<float>();
     float cameraSlowdownCoef = gameCfg["Camera"]["SlowDownCoef"].get<float>();
+    float pauseCd = gameCfg["Pause"].value("Cooldown", 0.3f);
+
+    basicSystemManager.AddInitializer(std::make_shared<GameInitSystem>(world, engine));
+
+    basicSystemManager.AddSystem(std::make_shared<AdditionalControlSystem>(world, engine, actionMap, _onPause, pauseCd)); // ничего не требует и дропает сцену
+
+    pausableSystemManager.AddSystem(std::make_shared<ShootingSystem>(world, actionMap, bulletSpeedX, bulletSpeedY, bulletSprite, heightOffset, cooldown));
+
+    pausableSystemManager.AddSystem(std::make_shared<MoveInputSystem>(world, actionMap));
+    pausableSystemManager.AddSystem(std::make_shared<CameraFollowXSystem>(world, cameraSpeedCoef, cameraSlowdownCoef));  
+    pausableSystemManager.AddSystem(std::make_shared<FallingSystem>(world));                     // после пользовательского ввода
+    pausableSystemManager.AddSystem(std::make_shared<ColliderSystem>(world, tileSize));             // строго до MoveSystem и после ввода всех передвижений
+    pausableSystemManager.AddSystem(std::make_shared<MoveSystem>(world));
+
+    pausableSystemManager.AddSystem(std::make_shared<FinishSystem>(world, engine));          // после коллайдера
+    pausableSystemManager.AddSystem(std::make_shared<BulletDeleteSystem>(world));          // после коллайдера
+
+    pausableSystemManager.AddSystem(std::make_shared<OutOfBoundsSystem>(world, static_cast<float>(engine.Window().getSize().y))); 
+    pausableSystemManager.AddSystem(std::make_shared<RespawnSystem>(world, engine));    // прямо перед killerSystem
+    pausableSystemManager.AddSystem(std::make_shared<KillerSystem>(world));
+
+    graphicsSystemManager.AddSystem(std::make_shared<DrawSystem>(world, engine));
+    graphicsSystemManager.AddSystem(std::make_shared<ShowGridSystem>(world, engine));  
     
-    systemsManager.AddInitializer(std::make_shared<GameInitSystem>(world, engine));
-
-
-    systemsManager.AddSystem(std::make_shared<AdditionalControlSystem>(world, engine, actionMap)); // ничего не требует и дропает сцену
-
-    systemsManager.AddSystem(std::make_shared<ShootingSystem>(world, actionMap, bulletSpeedX, bulletSpeedY, bulletSprite, heightOffset, cooldown));
-
-    systemsManager.AddSystem(std::make_shared<MoveInputSystem>(world, actionMap));
-    systemsManager.AddSystem(std::make_shared<CameraFollowXSystem>(world, cameraSpeedCoef, cameraSlowdownCoef));  
-    systemsManager.AddSystem(std::make_shared<FallingSystem>(world));                     // после пользовательского ввода
-    systemsManager.AddSystem(std::make_shared<ColliderSystem>(world, tileSize));             // строго до MoveSystem и после ввода всех передвижений
-    systemsManager.AddSystem(std::make_shared<MoveSystem>(world));
-
-    systemsManager.AddSystem(std::make_shared<FinishSystem>(world, engine));          // после коллайдера
-    systemsManager.AddSystem(std::make_shared<BulletDeleteSystem>(world));          // после коллайдера
-
-    systemsManager.AddSystem(std::make_shared<OutOfBoundsSystem>(world, static_cast<float>(engine.Window().getSize().y))); 
-    systemsManager.AddSystem(std::make_shared<RespawnSystem>(world, engine));    // прямо перед killerSystem
-
-    systemsManager.AddSystem(std::make_shared<DrawSystem>(world, engine));
-    systemsManager.AddSystem(std::make_shared<ShowGridSystem>(world, engine));       // должна быть после draw, чтобы рисовать поверх
-    systemsManager.AddSystem(std::make_shared<KillerSystem>(world));
+    graphicsSystemManager.AddSystem(std::make_shared<PauseSystem>(world, engine, _onPause));   
 }
 
 void GameScene::Init()
 {   
-    RegisterAction(sf::Keyboard::Key::W, "Jump");           //MoveInputSystem
-    RegisterAction(sf::Keyboard::Key::A, "Left");           //MoveInputSystem
-    RegisterAction(sf::Keyboard::Key::D, "Right");          //MoveInputSystem
-    RegisterAction(sf::Keyboard::Key::Space, "Shoot");      //ShootingSystem
-    RegisterAction(sf::Keyboard::Key::Escape, "Menu");      //AdditionalControlSystem
-    RegisterAction(sf::Keyboard::Key::P, "Pause");          //AdditionalControlSystem, пока нереализованная заглушка
+
     systemsManager.Initialize();
+    pausableSystemManager.Initialize();
+    graphicsSystemManager.Initialize();
 }
 
 void GameScene::Update(float dt)
 {
     systemsManager.Update(dt);
+    if (!_onPause)
+    {
+        pausableSystemManager.Update(dt);
+    }
+    graphicsSystemManager.Update(dt);
 }

@@ -4,7 +4,7 @@
 
 #include "../../Ecs/Systems/ISystem.h"
 
-#include "../../GameEngine/Input/InputManager.h"
+#include "../../GameEngine/Input/InputAction.h"
 
 #include "../Components/PlayerComponent.h"
 #include "../Components/MovementComponent.h"
