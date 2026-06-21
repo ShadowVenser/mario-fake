@@ -12,6 +12,7 @@
 #include "../Components/BaseSpeedComponent.h"
 #include "../Components/BoxColliderComponent.h"
 #include "../Components/GravityComponent.h"
+#include "../Components/FinishComponent.h"
 #include "../Components/TextComponent.h"
 
 #include "SFML/Graphics/Rect.hpp"
@@ -32,6 +33,7 @@ void GameInitSystem::OnInit()
     auto& gravityStorage = world.GetStorage<GravityComponent>();
     auto& posStorage = world.GetStorage<PositionComponent>();
     auto& colliderStorage = world.GetStorage<BoxColliderComponent>();
+    auto& finishStorage = world.GetStorage<FinishComponent>();
     // auto& textsStorage = world.GetStorage<TextComponent>();
     auto& camerasStorage = world.GetStorage<CameraComponent>();
 
@@ -109,14 +111,19 @@ void GameInitSystem::OnInit()
                 auto size = spriteMap[name]->getTexture().getSize();
                 int width = size.x;
                 int height = size.y;
-                if (entityJson["Collider"].contains("W")){
+                if (entityJson["Collider"].contains("Width")){
                     width = entityJson["Collider"]["Width"].get<unsigned int>();
+                }
+                if (entityJson["Collider"].contains("Height")){
                     height = entityJson["Collider"]["Height"].get<unsigned int>();
                 }
                 colliderStorage.Add(newEntity, {static_cast<float>(width), static_cast<float>(height)});
             }
             if (entityJson.contains("Gravity")){  
                 gravityStorage.Add(newEntity, {entityJson["Gravity"].get<float>() * fTileSize});
+            }
+            if (entityJson.contains("Finish")){  
+                finishStorage.Add(newEntity, {});
             }
 
 

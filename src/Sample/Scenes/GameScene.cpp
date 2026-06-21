@@ -9,6 +9,8 @@
 #include "../Systems/ColliderSystem.h"
 #include "../Systems/MoveSystem.h"
 #include "../Systems/ShootingSystem.h"
+#include "../Systems/FinishSystem.h"
+#include "../Systems/AdditionalControlSystem.h"
 
 #include "../Systems/DrawSystem.h"
 #include "../Systems/KillerSystem.h"
@@ -26,11 +28,17 @@ GameScene::GameScene(GameEngine& engine): Scene(engine)
     
     systemsManager.AddInitializer(std::make_shared<GameInitSystem>(world, engine));
 
+
+    systemsManager.AddSystem(std::make_shared<AdditionalControlSystem>(world, engine, actionMap)); // ничего не требует и дропает сцену
+
     systemsManager.AddSystem(std::make_shared<ShootingSystem>(world, actionMap, bulletSpeedX, bulletSpeedY, bulletSprite, heightOffset, cooldown));
-    systemsManager.AddSystem(std::make_shared<MoveInputSystem>(world, engine, actionMap));
-    systemsManager.AddSystem(std::make_shared<FallingSystem>(world));     // после пользовательского ввода
+    
+    systemsManager.AddSystem(std::make_shared<MoveInputSystem>(world, actionMap));
+    systemsManager.AddSystem(std::make_shared<FallingSystem>(world));                     // после пользовательского ввода
     systemsManager.AddSystem(std::make_shared<ColliderSystem>(world, tileSize));             // строго до MoveSystem и после ввода всех передвижений
     systemsManager.AddSystem(std::make_shared<MoveSystem>(world));
+
+    systemsManager.AddSystem(std::make_shared<FinishSystem>(world, engine));          // после коллайдера
 
     systemsManager.AddSystem(std::make_shared<DrawSystem>(world, engine));
     systemsManager.AddSystem(std::make_shared<ShowGridSystem>(world, engine));       // должна быть после draw, чтобы рисовать поверх
@@ -39,10 +47,12 @@ GameScene::GameScene(GameEngine& engine): Scene(engine)
 
 void GameScene::Init()
 {   
-    RegisterAction(sf::Keyboard::Key::W, "Jump");
-    RegisterAction(sf::Keyboard::Key::A, "Left");
-    RegisterAction(sf::Keyboard::Key::D, "Right");
-    RegisterAction(sf::Keyboard::Key::Space, "Shoot");
+    RegisterAction(sf::Keyboard::Key::W, "Jump");           //MoveInputSystem
+    RegisterAction(sf::Keyboard::Key::A, "Left");           //MoveInputSystem
+    RegisterAction(sf::Keyboard::Key::D, "Right");          //MoveInputSystem
+    RegisterAction(sf::Keyboard::Key::Space, "Shoot");      //ShootingSystem
+    RegisterAction(sf::Keyboard::Key::Escape, "Menu");      //AdditionalControlSystem
+    RegisterAction(sf::Keyboard::Key::P, "Pause");          //AdditionalControlSystem, пока нереализованная заглушка
     systemsManager.Initialize();
 }
 

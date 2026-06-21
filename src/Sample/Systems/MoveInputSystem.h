@@ -16,16 +16,14 @@ private:
     ComponentStorage<MovementComponent>& _moveStorage;
     ComponentStorage<PlayerComponent>& _playerStorage;
     ComponentStorage<BaseSpeedComponent>& _baseSpeedStorage;
-    GameEngine& _engine;
     InputMap& _inputMap;
 
 public:
-    MoveInputSystem(World &world, GameEngine& engine, InputMap& inputMap): 
+    MoveInputSystem(World &world, InputMap& inputMap): 
         ISystem(world),
         _moveStorage(world.GetStorage<MovementComponent>()),
         _playerStorage(world.GetStorage<PlayerComponent>()),
         _baseSpeedStorage(world.GetStorage<BaseSpeedComponent>()),
-        _engine(engine),
         _inputMap(inputMap)
     { }
 

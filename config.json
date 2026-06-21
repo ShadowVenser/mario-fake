@@ -64,8 +64,8 @@
                     "Gravity": 12.0,
                     "Texture" : "question",
                     "Collider" : {
-                        "Width": 40,
-                        "Height": 64
+                        "Width": 63,
+                        "Height": 63
                     }
                 },
                 "Bullet" : {
@@ -92,7 +92,10 @@
                 },
                 "Finish" : {
                     "Texture" : "finish",
-                    "Collider" : {}
+                    "Collider" : {
+                        "Width": 8
+                    },
+                    "Finish" : {}
                 }
             },
             "Grid": 
