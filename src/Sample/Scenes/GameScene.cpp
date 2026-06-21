@@ -13,6 +13,7 @@
 #include "../Systems/OutOfBoundsSystem.h"
 #include "../Systems/RespawnSystem.h"
 #include "../Systems/AdditionalControlSystem.h"
+#include "../Systems/CameraFollowXSystem.h"
 
 #include "../Systems/DrawSystem.h"
 #include "../Systems/KillerSystem.h"
@@ -27,6 +28,8 @@ GameScene::GameScene(GameEngine& engine): Scene(engine)
     float heightOffset = static_cast<float>(gameCfg["Entities"]["Bullet"]["SpawnHeightOffset"].get<int>());
     float cooldown = gameCfg["Entities"]["Bullet"]["Cooldown"].get<float>();
     // ваще говоря у системы есть инициализатор, и по-хорошему это туда запихать, но я уже сделал так
+    float cameraSpeedCoef = gameCfg["Camera"]["SpeedCoef"].get<float>();
+    float cameraSlowdownCoef = gameCfg["Camera"]["SlowDownCoef"].get<float>();
     
     systemsManager.AddInitializer(std::make_shared<GameInitSystem>(world, engine));
 
@@ -36,6 +39,7 @@ GameScene::GameScene(GameEngine& engine): Scene(engine)
     systemsManager.AddSystem(std::make_shared<ShootingSystem>(world, actionMap, bulletSpeedX, bulletSpeedY, bulletSprite, heightOffset, cooldown));
 
     systemsManager.AddSystem(std::make_shared<MoveInputSystem>(world, actionMap));
+    systemsManager.AddSystem(std::make_shared<CameraFollowXSystem>(world, cameraSpeedCoef, cameraSlowdownCoef));  
     systemsManager.AddSystem(std::make_shared<FallingSystem>(world));                     // после пользовательского ввода
     systemsManager.AddSystem(std::make_shared<ColliderSystem>(world, tileSize));             // строго до MoveSystem и после ввода всех передвижений
     systemsManager.AddSystem(std::make_shared<MoveSystem>(world));

@@ -37,11 +37,6 @@ void GameInitSystem::OnInit()
     // auto& textsStorage = world.GetStorage<TextComponent>();
     auto& camerasStorage = world.GetStorage<CameraComponent>();
 
-    // ----- CAMERA INIT -----
-    _engine.Window().setView(_engine.Window().getDefaultView());
-    
-    auto camera = world.CreateEntity();
-    camerasStorage.Add(camera, {.type=CameraType::Default, .view=nullptr}); //::FollowX
 
     // ----- LEVEL INIT -----
     
@@ -132,7 +127,16 @@ void GameInitSystem::OnInit()
             
         };
 
+        if (lvlJson.contains("BackgroundObjects")){
+            for (const auto& obj : lvlJson["BackgroundObjects"]) {
 
+                std::string objType = obj["name"].get<std::string>();
+                int x = obj["x"].get<int>();
+                int y = obj["y"].get<int>();
+
+                createEntity(objType, x, y);            
+            }
+        }
         for (const auto& obj : lvlJson["MassObjects"]) {                  // считывание level.json
 
             std::string objType = obj["name"].get<std::string>();
@@ -155,7 +159,19 @@ void GameInitSystem::OnInit()
 
             createEntity(objType, x, y);            
         }
-
+        
+        // ----- CAMERA INIT -----
+        float windowH = static_cast<float>(_engine.Window().getSize().y);
+        float windowW = static_cast<float>(_engine.Window().getSize().x);
+        float x = windowW/2.f;
+        if (playerStorage.Count()>0){
+            x = posStorage.All()[playerStorage.Entities()[0]].pos.x;
+        }
+        std::shared_ptr<sf::View> followXView = std::make_shared<sf::View>(sf::View({x,windowH/2.f},{windowW, windowH}));
+            
+        _engine.Window().setView(*followXView);
+        auto camera = world.CreateEntity();
+        camerasStorage.Add(camera, {.type=CameraType::FollowX, .view=followXView}); //::FollowX
     }
 
     ////////////////////////////////////       писать дальше
