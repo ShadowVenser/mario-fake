@@ -149,6 +149,11 @@ public:
                 throw std::runtime_error("Try to add to dead entity!");
         #endif
 
+        if (this->Has(e)){
+            this->Get(e) = value;
+            return this->Get(e);
+        }
+
         _Resize((e / 64 + 1) * 64, _data.size() <= (size_t)(_count + 1) ? _data.size() + 64 : _data.size());
         
         if (_isBinded && ((_world.GetEntityComponents(e) | 1 << _id)& _filterMask) == _filterMask) {

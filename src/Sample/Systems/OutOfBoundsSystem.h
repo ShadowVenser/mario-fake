@@ -11,7 +11,6 @@
 #include "../Components/KillMeComponent.h"
 
 class OutOfBoundsSystem final : public ISystem {
-    using InputMap = std::unordered_map<std::string, std::shared_ptr<InputAction>>;
 private:
     ComponentStorage<PlayerComponent>& _playerStorage;
     ComponentStorage<PositionComponent>& _posStorage;

@@ -9,7 +9,6 @@
 #include "../Components/FinishComponent.h"
 
 class FinishSystem final : public ISystem {
-    using InputMap = std::unordered_map<std::string, std::shared_ptr<InputAction>>;
 private:
     ComponentStorage<CollisionEventComponent>& _collisionStorage;
     ComponentStorage<PlayerComponent>& _playerStorage;

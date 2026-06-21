@@ -9,6 +9,7 @@
 #include "../Systems/ColliderSystem.h"
 #include "../Systems/MoveSystem.h"
 #include "../Systems/ShootingSystem.h"
+#include "../Systems/BulletDeleteSystem.h"
 #include "../Systems/FinishSystem.h"
 #include "../Systems/OutOfBoundsSystem.h"
 #include "../Systems/RespawnSystem.h"
@@ -45,6 +46,7 @@ GameScene::GameScene(GameEngine& engine): Scene(engine)
     systemsManager.AddSystem(std::make_shared<MoveSystem>(world));
 
     systemsManager.AddSystem(std::make_shared<FinishSystem>(world, engine));          // после коллайдера
+    systemsManager.AddSystem(std::make_shared<BulletDeleteSystem>(world));          // после коллайдера
 
     systemsManager.AddSystem(std::make_shared<OutOfBoundsSystem>(world, static_cast<float>(engine.Window().getSize().y))); 
     systemsManager.AddSystem(std::make_shared<RespawnSystem>(world, engine));    // прямо перед killerSystem

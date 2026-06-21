@@ -62,6 +62,7 @@ void ColliderSystem::OnUpdate(float t) {
                     if (!_playerStorage.Has(id2)){ // мы не хотим долбиться в пули, но умирать об пули тоже не хочется
                         const auto newEntity = world.CreateEntity();
                         _collisionStorage.Add(newEntity, {id1, id2});
+                        _killMeStorage.Add(newEntity, {});
                     }
                     continue;
                 }
@@ -93,6 +94,7 @@ void ColliderSystem::OnUpdate(float t) {
                     if (move1.ySpeed<0 && _playerStorage.Has(id1)){ // ударились головой
                         const auto newEntity = world.CreateEntity();
                         _collisionStorage.Add(newEntity, {id1, id2});
+                        _killMeStorage.Add(newEntity, {});
                     }
                     move1.ySpeed = ((bb1y1 < bb2y1)? (bb2y1-bb1y2) : (bb2y2-bb1y1)) / t;
                 } else {
@@ -110,6 +112,7 @@ void ColliderSystem::OnUpdate(float t) {
                         if (move1.ySpeed<0 && _playerStorage.Has(id1)){ // ударились головой
                             const auto newEntity = world.CreateEntity();
                             _collisionStorage.Add(newEntity, {id1, id2});
+                            _killMeStorage.Add(newEntity, {});
                         }
                         //std::cout<<"y угол "<<bb1x1/64<<" "<<bb1x2/64<<" "<<bb1y1/64<<" "<<bb1y2/64<<" / "<<bb1x1/64+move1.xSpeed*t/64<<" "<<bb1x2/64+move1.xSpeed*t/64<<" "<<bb1y1/64+move1.ySpeed*t/64<<" "<<bb1y2/64+move1.ySpeed*t/64<<" / "<<bb1x1/64+newxSpeed*t/64<<" "<<bb1x2/64+newxSpeed*t/64<<" "<<bb1y1/64 + newySpeed*t/64<<" "<<bb1y2/64+newySpeed*t/64<<" | "<<bb2x1/64<<" "<<bb2x2/64<<" "<<bb2y1/64<<" "<<bb2y2/64<<" \n";
                         move1.ySpeed = ((bb1y1 < bb2y1)? (bb2y1-bb1y2) : (bb2y2-bb1y1)) / t;

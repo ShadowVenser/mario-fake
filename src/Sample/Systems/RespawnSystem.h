@@ -10,7 +10,6 @@
 #include "../Components/KillMeComponent.h"
 
 class RespawnSystem final : public ISystem {
-    using InputMap = std::unordered_map<std::string, std::shared_ptr<InputAction>>;
 private:
     GameEngine& _engine;
     ComponentStorage<PlayerComponent>& _playerStorage;
