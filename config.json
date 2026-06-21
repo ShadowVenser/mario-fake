@@ -93,7 +93,8 @@
                 "Finish" : {
                     "Texture" : "finish",
                     "Collider" : {
-                        "Width": 8
+                        "Width": 8,
+                        "Height": 480
                     },
                     "Finish" : {}
                 }

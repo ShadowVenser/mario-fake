@@ -4,6 +4,7 @@
 
 #include "../Systems/GameInitSystem.h"
 #include "../Systems/ShowGridSystem.h"
+#include "../Systems/ShowCollidersSystem.h"
 #include "../Systems/MoveInputSystem.h"
 #include "../Systems/FallingSystem.h"
 #include "../Systems/ColliderSystem.h"
@@ -53,6 +54,7 @@ GameScene::GameScene(GameEngine& engine): Scene(engine)
 
     systemsManager.AddSystem(std::make_shared<DrawSystem>(world, engine));
     systemsManager.AddSystem(std::make_shared<ShowGridSystem>(world, engine));       // должна быть после draw, чтобы рисовать поверх
+    systemsManager.AddSystem(std::make_shared<ShowCollidersSystem>(world, engine));
     systemsManager.AddSystem(std::make_shared<KillerSystem>(world));
 }
 

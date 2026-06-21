@@ -1,16 +1,24 @@
 #include "ColliderSystem.h"
 
-bool inline lineColliding(float xa1, float xa2, float xb1, float xb2){
-    return xa2 > xb1 && xa1 < xb2;
-}
+#include <vector>
+
+// #include <iostream>
+// #include <iomanip>
+
+
 bool inline nearZero(float x, float precision=0.5f){
     return x < precision && x > -precision;
+}
+bool inline lineColliding(float xa1, float xa2, float xb1, float xb2){
+    return xa2 > xb1 && xa1 < xb2 && !nearZero(xa2-xb1) && !nearZero(xb2-xa1);
 }
 bool inline boxColliding(float xa1, float xa2, float ya1, float ya2, float xb1, float xb2, float yb1, float yb2){
     return (ya2 > yb1 && ya1 < yb2 && xa2 > xb1 && xa1 < xb2);
 }
 
 void ColliderSystem::OnUpdate(float t) {
+    
+    // std::cout <<std::fixed << std::setprecision(2);
 
     for (auto& id1: _moveStorage.Entities())
     {
@@ -30,7 +38,23 @@ void ColliderSystem::OnUpdate(float t) {
         float bb1y2 = pos1.y + (((coll1.h>_gridSize)? _gridSize : coll1.h) / 2.f);
         float bb1y1 = bb1y2 - coll1.h;
 
-        for (auto& id2: _colliderStorage.Entities())
+        std::vector<int> colliding = std::vector<int>();
+
+        auto sorted_insert = [&](int elem, sf::Vector2f& elemPos) {
+            size_t i = colliding.size();
+            colliding.push_back(elem);
+            while (
+                i > 0 &&
+                (_posStorage[colliding[i-1]].pos - pos1).lengthSquared() > (elemPos - pos1).lengthSquared()
+            ) {
+                colliding[i] = colliding[i-1];
+                --i;
+            }
+            colliding[i] = elem;            
+        };
+
+        
+        for (auto id2: _colliderStorage.Entities())
         {
             if (!world.IsEntityAlive(id2))
                 continue;
@@ -67,8 +91,31 @@ void ColliderSystem::OnUpdate(float t) {
                 if (_bulletStorage.Has(id2)){ //опять же, не долбиться в пули
                     continue;
                 }
-
-                if ((nearZero(bb1x2-bb2x1) && move1.xSpeed > 0.f) || (nearZero(bb1x2-bb2x1) && move1.xSpeed < 0.f)){
+                sorted_insert(id2, pos2);           
+            }
+        }
+        for (auto id2 : colliding){
+            auto& pos2 = _posStorage[id2].pos;
+            auto& coll2 = _colliderStorage[id2];
+            
+            float bb2x1 = pos2.x - (((coll2.w>_gridSize)? _gridSize : coll2.w) / 2.f);       
+            float bb2x2 = bb2x1 + coll2.w;                                                    
+            
+            float bb2y2 = pos2.y + (((coll2.h>_gridSize)? _gridSize : coll2.h) / 2.f);
+            float bb2y1 = bb2y2 - coll2.h;
+            
+            if (boxColliding(
+                bb1x1 + move1.xSpeed*t, 
+                bb1x2 + move1.xSpeed*t, 
+                bb1y1 + move1.ySpeed*t,
+                bb1y2 + move1.ySpeed*t,
+                bb2x1, 
+                bb2x2,
+                bb2y1,
+                bb2y2
+            )){
+            
+            if ((nearZero(bb1x2-bb2x1) && move1.xSpeed > 0.f) || (nearZero(bb1x2-bb2x1) && move1.xSpeed < 0.f)){
                     move1.xSpeed = 0.f;
                     continue;
                 } 
@@ -82,6 +129,10 @@ void ColliderSystem::OnUpdate(float t) {
                     bb2y1,
                     bb2y2
                 )){
+                    // float newxSpeed = ((bb1x1 < bb2x1)? (bb2x1-bb1x2) : (bb2x2-bb1x1)) / t;                
+                    // float newySpeed = ((bb1y1 < bb2y1)? (bb2y1-bb1y2) : (bb2y2-bb1y1)) / t;
+                    // std::cout<<"x \n"<<bb1x1/64<<" "<<bb1x2/64<<" "<<bb1y1/64<<" "<<bb1y2/64<<" / \n"<<bb1x1/64+move1.xSpeed*t/64<<" "<<bb1x2/64+move1.xSpeed*t/64<<" "<<bb1y1/64+move1.ySpeed*t/64<<" "<<bb1y2/64+move1.ySpeed*t/64<<" / \n"<<bb1x1/64+newxSpeed*t/64<<" "<<bb1x2/64+newxSpeed*t/64<<" "<<bb1y1/64 + newySpeed*t/64<<" "<<bb1y2/64+newySpeed*t/64<<" | \n"<<bb2x1/64<<" "<<bb2x2/64<<" "<<bb2y1/64<<" "<<bb2y2/64<<" \n\n";
+                        
                     move1.xSpeed = ((bb1x1 < bb2x1)? (bb2x1-bb1x2) : (bb2x2-bb1x1)) / t;
                 } else if (lineColliding(
                     bb1x1,
@@ -94,6 +145,11 @@ void ColliderSystem::OnUpdate(float t) {
                         _collisionStorage.Add(newEntity, {id1, id2});
                         _killMeStorage.Add(newEntity, {});
                     }
+                    
+                    // float newxSpeed = ((bb1x1 < bb2x1)? (bb2x1-bb1x2) : (bb2x2-bb1x1)) / t;                
+                    // float newySpeed = ((bb1y1 < bb2y1)? (bb2y1-bb1y2) : (bb2y2-bb1y1)) / t;
+                    // std::cout<<"y \n"<<bb1x1/64<<" "<<bb1x2/64<<" "<<bb1y1/64<<" "<<bb1y2/64<<" / \n"<<bb1x1/64+move1.xSpeed*t/64<<" "<<bb1x2/64+move1.xSpeed*t/64<<" "<<bb1y1/64+move1.ySpeed*t/64<<" "<<bb1y2/64+move1.ySpeed*t/64<<" / \n"<<bb1x1/64+newxSpeed*t/64<<" "<<bb1x2/64+newxSpeed*t/64<<" "<<bb1y1/64 + newySpeed*t/64<<" "<<bb1y2/64+newySpeed*t/64<<" | \n"<<bb2x1/64<<" "<<bb2x2/64<<" "<<bb2y1/64<<" "<<bb2y2/64<<" \n\n";
+                        
                     move1.ySpeed = ((bb1y1 < bb2y1)? (bb2y1-bb1y2) : (bb2y2-bb1y1)) / t;
                 } else {
 
@@ -105,6 +161,7 @@ void ColliderSystem::OnUpdate(float t) {
                         bb2y1,
                         bb2y2
                     )) {
+                        //std::cout<<"x угол \n"<<bb1x1/64<<" "<<bb1x2/64<<" "<<bb1y1/64<<" "<<bb1y2/64<<" / \n"<<bb1x1/64+move1.xSpeed*t/64<<" "<<bb1x2/64+move1.xSpeed*t/64<<" "<<bb1y1/64+move1.ySpeed*t/64<<" "<<bb1y2/64+move1.ySpeed*t/64<<" / \n"<<bb1x1/64+newxSpeed*t/64<<" "<<bb1x2/64+newxSpeed*t/64<<" "<<bb1y1/64 + newySpeed*t/64<<" "<<bb1y2/64+newySpeed*t/64<<" | \n"<<bb2x1/64<<" "<<bb2x2/64<<" "<<bb2y1/64<<" "<<bb2y2/64<<" \n\n";
                         move1.xSpeed = newxSpeed;
                     } else {
                         if (move1.ySpeed<0 && _playerStorage.Has(id1)){ // ударились головой
@@ -112,10 +169,11 @@ void ColliderSystem::OnUpdate(float t) {
                             _collisionStorage.Add(newEntity, {id1, id2});
                             _killMeStorage.Add(newEntity, {});
                         }
-                        //std::cout<<"y угол "<<bb1x1/64<<" "<<bb1x2/64<<" "<<bb1y1/64<<" "<<bb1y2/64<<" / "<<bb1x1/64+move1.xSpeed*t/64<<" "<<bb1x2/64+move1.xSpeed*t/64<<" "<<bb1y1/64+move1.ySpeed*t/64<<" "<<bb1y2/64+move1.ySpeed*t/64<<" / "<<bb1x1/64+newxSpeed*t/64<<" "<<bb1x2/64+newxSpeed*t/64<<" "<<bb1y1/64 + newySpeed*t/64<<" "<<bb1y2/64+newySpeed*t/64<<" | "<<bb2x1/64<<" "<<bb2x2/64<<" "<<bb2y1/64<<" "<<bb2y2/64<<" \n";
+                        // newySpeed = ((bb1y1 < bb2y1)? (bb2y1-bb1y2) : (bb2y2-bb1y1)) / t;
+                        // std::cout<<"y угол \n"<<bb1x1/64<<" "<<bb1x2/64<<" "<<bb1y1/64<<" "<<bb1y2/64<<" / \n"<<bb1x1/64+move1.xSpeed*t/64<<" "<<bb1x2/64+move1.xSpeed*t/64<<" "<<bb1y1/64+move1.ySpeed*t/64<<" "<<bb1y2/64+move1.ySpeed*t/64<<" / \n"<<bb1x1/64+newxSpeed*t/64<<" "<<bb1x2/64+newxSpeed*t/64<<" "<<bb1y1/64 + newySpeed*t/64<<" "<<bb1y2/64+newySpeed*t/64<<" | \n"<<bb2x1/64<<" "<<bb2x2/64<<" "<<bb2y1/64<<" "<<bb2y2/64<<" \n\n";
                         move1.ySpeed = ((bb1y1 < bb2y1)? (bb2y1-bb1y2) : (bb2y2-bb1y1)) / t;
                     }   
-                }             
+                }
             }
         }
     }
