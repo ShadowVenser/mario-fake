@@ -1,7 +1,5 @@
 #include "ColliderSystem.h"
 
-#include <iostream>
-
 bool inline lineColliding(float xa1, float xa2, float xb1, float xb2){
     return xa2 > xb1 && xa1 < xb2;
 }
@@ -70,11 +68,11 @@ void ColliderSystem::OnUpdate(float t) {
                     continue;
                 }
 
-                if (nearZero(bb1x2-bb2x1) && move1.xSpeed > 0.f || nearZero(bb1x2-bb2x1) && move1.xSpeed < 0.f){
+                if ((nearZero(bb1x2-bb2x1) && move1.xSpeed > 0.f) || (nearZero(bb1x2-bb2x1) && move1.xSpeed < 0.f)){
                     move1.xSpeed = 0.f;
                     continue;
                 } 
-                if (nearZero(bb1y2-bb2y1) && move1.ySpeed > 0.f || nearZero(bb1y2-bb2y1) && move1.ySpeed > 0.f){
+                if ((nearZero(bb1y2-bb2y1) && move1.ySpeed > 0.f) || (nearZero(bb1y2-bb2y1) && move1.ySpeed > 0.f)){
                     move1.ySpeed = 0.f;
                     continue;
                 } 

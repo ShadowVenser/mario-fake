@@ -1,12 +1,11 @@
 #pragma once
 
-#include "SFML/Graphics/Sprite.hpp"
+#include "SFML/Graphics.hpp"
 
-#include "../../GameEngine/GameEngine.h"
 
 #include "../../Ecs/Systems/ISystem.h"
 
-#include "../../GameEngine/Input/InputManager.h"
+#include "../../GameEngine/Input/InputAction.h"
 
 #include "../Components/PlayerComponent.h"
 #include "../Components/PositionComponent.h"
@@ -43,11 +42,11 @@ public:
         _spriteStorage(world.GetStorage<SpriteComponent>()),
         _collStorage(world.GetStorage<BoxColliderComponent>()),
         _inputMap(inputMap),
+        _bulletHeight(heightOffset),
+        _bulletCooldown(cooldown),
         _bulletSpeedX(bulletSpeedX),
         _bulletSpeedY(bulletSpeedY),
-        _bulletSprite(bulletSprite),
-        _bulletHeight(heightOffset),
-        _bulletCooldown(cooldown)
+        _bulletSprite(bulletSprite)
     {
         auto size = _bulletSprite->getTexture().getSize();
         _bulletSprite->setOrigin({static_cast<float>(size.x)/2.f, static_cast<float>(size.y)/2.f});

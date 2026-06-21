@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../GameEngine/GameEngine.h"
-
 #include "../../Ecs/Systems/ISystem.h"
 
 #include "../Components/PositionComponent.h"

@@ -13,9 +13,7 @@
 #include "../Components/BoxColliderComponent.h"
 #include "../Components/GravityComponent.h"
 #include "../Components/FinishComponent.h"
-#include "../Components/TextComponent.h"
 
-#include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/System/Vector2.hpp"
 

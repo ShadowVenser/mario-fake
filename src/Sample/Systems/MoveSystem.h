@@ -1,10 +1,6 @@
 #pragma once
 
-#include "../../GameEngine/GameEngine.h"
-
 #include "../../Ecs/Systems/ISystem.h"
-
-#include "../../GameEngine/Input/InputManager.h"
 
 #include "../Components/PositionComponent.h"
 #include "../Components/MovementComponent.h"
