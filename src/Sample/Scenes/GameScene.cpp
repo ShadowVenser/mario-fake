@@ -16,6 +16,7 @@
 #include "../Systems/RespawnSystem.h"
 #include "../Systems/AdditionalControlSystem.h"
 #include "../Systems/CameraFollowXSystem.h"
+#include "../Systems/SoundSystem.h"
 
 #include "../Systems/DrawSystem.h"
 #include "../Systems/KillerSystem.h"
@@ -51,6 +52,9 @@ GameScene::GameScene(GameEngine& engine): Scene(engine)
 
     systemsManager.AddSystem(std::make_shared<OutOfBoundsSystem>(world, static_cast<float>(engine.Window().getSize().y))); 
     systemsManager.AddSystem(std::make_shared<RespawnSystem>(world, engine));    // прямо перед killerSystem
+
+    
+    systemsManager.AddSystem(std::make_shared<SoundSystem>(world, engine.Assets().GetSounds(), engine.Assets().GetMusic("hello"))); 
 
     systemsManager.AddSystem(std::make_shared<DrawSystem>(world, engine));
     systemsManager.AddSystem(std::make_shared<ShowGridSystem>(world, engine));       // должна быть после draw, чтобы рисовать поверх

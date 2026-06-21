@@ -66,8 +66,34 @@ bool AssetManager::LoadFromFile(const std::string &path)
         }
     }
 
+    
+    if (aInfo.contains("SoundEffects"))
+    {
+        for (const auto& SoundInfo: aInfo["SoundEffects"])
+        {
+            AddSound
+            (
+                SoundInfo.at("name").get<std::string>(),
+                SoundInfo.at("path").get<std::string>()
+            );
+        }
+    }
+
+    if (aInfo.contains("Music"))
+    {
+        for (const auto& MusicInfo: aInfo["SoundEffects"])
+        {
+            AddSound
+            (
+                MusicInfo.at("name").get<std::string>(),
+                MusicInfo.at("path").get<std::string>()
+            );
+        }
+    }
+
     return true;
 }
+
 
 bool AssetManager::AddTexture
 (
@@ -150,6 +176,38 @@ bool AssetManager::AddFont
     return true;
 }
 
+
+bool AssetManager::AddSound
+(
+    const std::string &name, 
+    const std::string &path
+)
+{
+    if (auto it = _sounds.find(name); it != _sounds.end())
+    {
+        return false;
+    }
+    _sounds.insert({name, sf::SoundBuffer(path)});
+
+    return true;
+}
+
+bool AssetManager::AddMusic
+(
+    const std::string &name, 
+    const std::string &path
+)
+{
+    if (auto it = _music.find(name); it != _music.end())
+    {
+        return false;
+    }
+    
+    _music.insert({name, sf::Music(path)});
+
+    return true;
+}
+
 const sf::Texture* AssetManager::GetTexture(const std::string &name) const
 {
     if (auto it = _textures.find(name); it != _textures.end())
@@ -164,14 +222,27 @@ const Animation* AssetManager::GetAnimation(const std::string &name) const
     return nullptr;
 }
 
- 
-
 const sf::Font* AssetManager::GetFont(const std::string &name) const
 {
     if (auto it = _fonts.find(name); it != _fonts.end())
         return &it->second;
     return nullptr;
 }
+
+const sf::Sound AssetManager::GetSound(const std::string &name) const
+{
+    if (auto it = _sounds.find(name); it != _sounds.end())
+        return sf::Sound(it->second);
+    return sf::Sound(emptySoundBuffer);
+}
+
+const sf::Music* AssetManager::GetMusic(const std::string &name) const
+{
+    if (auto it = _music.find(name); it != _music.end())
+        return &it->second;
+    return nullptr;
+}
+
 
 
 
