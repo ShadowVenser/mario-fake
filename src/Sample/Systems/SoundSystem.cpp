@@ -4,9 +4,6 @@
 void SoundSystem::OnUpdate(float)
 {
     for (auto& event : _eventStorage.All()){
-        // std::shared_ptr<sf::Sound> ptr = std::make_shared<sf::Sound>(*_assets.GetSound("something"));
-        // ptr->play();
-        // _activeSounds.insert(ptr);
         std::shared_ptr<sf::Sound> ptr = std::make_shared<sf::Sound>(*_assets.GetSound(event.soundType));
         ptr->play();
         _activeSounds.insert(ptr);

@@ -17,6 +17,7 @@
 #include "../Systems/AdditionalControlSystem.h"
 #include "../Systems/CameraFollowXSystem.h"
 #include "../Systems/SoundSystem.h"
+#include "../Systems/sfxCollisionSystem.h"
 
 #include "../Systems/DrawSystem.h"
 #include "../Systems/KillerSystem.h"
@@ -54,6 +55,7 @@ GameScene::GameScene(GameEngine& engine): Scene(engine)
     systemsManager.AddSystem(std::make_shared<RespawnSystem>(world, engine));    // прямо перед killerSystem
 
     
+    systemsManager.AddSystem(std::make_shared<sfxCollisionSystem>(world, gameCfg["SFX"]["BoomSound"].get<std::string>())); 
     systemsManager.AddSystem(std::make_shared<SoundSystem>(world, engine.Assets(), gameCfg["GameMusic"].get<std::string>())); 
 
     systemsManager.AddSystem(std::make_shared<DrawSystem>(world, engine));

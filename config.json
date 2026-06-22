@@ -112,6 +112,10 @@
                 "SpeedCoef" : 13.0,
                 "SlowDownCoef" : 0.90
             },
+            "SFX": {
+                "BoomSound" : "boom",
+                "BulletSound" : "pew"
+            },
             "GameMusic": "hello"
             
         }
