@@ -11,6 +11,9 @@ private:
     SystemsManager graphicsSystemManager;
 
     bool _onPause;
+    bool _isDrawShown = true;
+    bool _isGridShown = false;
+    bool _isBoxShown = false;
 
 public:
     GameScene(GameEngine& engine);

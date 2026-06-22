@@ -7,6 +7,7 @@ void MoveInputSystem::OnUpdate(float) {
 
     MovementComponent* move;
     BaseSpeedComponent* baseSpeed;
+    PlayerComponent* player;
 
     for (auto& id: _playerStorage.Entities())
     {
@@ -14,23 +15,37 @@ void MoveInputSystem::OnUpdate(float) {
             continue;
         move = &_moveStorage[id];
         baseSpeed = &_baseSpeedStorage[id];
+        player = &_playerStorage[id];
         break;
     }
 
     float xDir = 0.f;
     float yDir = 0.f;
-    bool onGround = move->ySpeed < 1.f && move->ySpeed > -1.f; // тупо + так не работают рампы, но а нам не пофиг ли?
 
-    if (_inputMap["Jump"]->Type()==ActionType::Start) {
-        yDir += onGround? -1.f : 0.f;
-    }
-    if (_inputMap["Left"]->Type()==ActionType::Pressed) {
-        xDir -= 1.f;
-    }
-    if (_inputMap["Right"]->Type()==ActionType::Pressed) {
-        xDir += 1.f;
-    }
+    // if (move->ySpeed < 1.f && move->ySpeed > -1.f)
+    // {
+    //     player->events |= PlayerComponent::CAN_JUMP;
+    // } 
+    // else 
+    // {
+    //     player->events &= ~PlayerComponent::CAN_JUMP;
+    // }
 
+    // if (_inputMap["Jump"]->Type()==ActionType::Start) {
+    if (player->events & PlayerComponent::JUMP_EVENT) {
+        yDir += -1.f;
+        player->events &= ~PlayerComponent::JUMP_EVENT;
+        player->events &= ~PlayerComponent::CAN_JUMP;
+    }
+    if (player->events & PlayerComponent::CAN_MOVE)
+    {
+        if (_inputMap["Left"]->Type()==ActionType::Pressed) {
+            xDir -= 1.f;
+        }
+        if (_inputMap["Right"]->Type()==ActionType::Pressed) {
+            xDir += 1.f;
+        }
+    }
     
     // домножение на gridsize вшито в базовые скорости в gameInit
 

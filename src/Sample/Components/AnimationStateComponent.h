@@ -2,7 +2,12 @@
 
 #include <cstddef>
 
-enum class AnimationNode { Idle, Pressed, Choosed, Activated, None };
+enum class AnimationNode 
+{ 
+    Idle, Pressed, Choosed, Activated, None,
+    JumpGU, JumpAU, JumpAS, JumpAD, JumpGD, 
+    Shoot, DeadAS, DeadAD, DeadGD, Move
+};
 
 struct AnimationStateComponent
 {
@@ -14,6 +19,6 @@ struct AnimationStateComponent
     size_t currentFrame;
     float timer;
 
-    bool isFinal;
-
+    bool isFinal = false;
+    bool isReflected = false;
 };

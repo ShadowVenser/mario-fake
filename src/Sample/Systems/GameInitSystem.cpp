@@ -13,6 +13,7 @@
 #include "../Components/BoxColliderComponent.h"
 #include "../Components/GravityComponent.h"
 #include "../Components/FinishComponent.h"
+#include "../Components/BreakableComponent.h"
 
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/System/Vector2.hpp"
@@ -33,6 +34,7 @@ void GameInitSystem::OnInit()
     auto& colliderStorage = world.GetStorage<BoxColliderComponent>();
     auto& finishStorage = world.GetStorage<FinishComponent>();
     // auto& textsStorage = world.GetStorage<TextComponent>();
+    auto& breakableStorage = world.GetStorage<BreakableComponent>();
     auto& camerasStorage = world.GetStorage<CameraComponent>();
 
 
@@ -101,9 +103,14 @@ void GameInitSystem::OnInit()
             }
 
             if (entityJson.contains("Collider")){  
-                auto size = spriteMap[name]->getTexture().getSize();
-                int width = size.x;
-                int height = size.y;
+                int width = 0;
+                int height = 0;
+                if (entityJson.contains("Texture") && !entityJson["Texture"].is_null())
+                {
+                    auto size = spriteMap[name]->getTexture().getSize();
+                    width = size.x;
+                    height = size.y;
+                }
                 if (entityJson["Collider"].contains("Width")){
                     width = entityJson["Collider"]["Width"].get<unsigned int>();
                 }
@@ -118,7 +125,10 @@ void GameInitSystem::OnInit()
             if (entityJson.contains("Finish")){  
                 finishStorage.Add(newEntity, {});
             }
-
+            if (entityJson.value("Breackable", false))
+            {
+                breakableStorage.Add(newEntity, {});
+            }
 
             // ДОБАВЛЯТЬ НОВЫЕ КОМПОНЕНТЫ СЮДА
 

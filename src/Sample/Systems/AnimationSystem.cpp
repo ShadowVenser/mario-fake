@@ -30,11 +30,11 @@ void AnimationSystem::OnUpdate(float dt)
             (
                 sf::IntRect{
                     {
-                        animation->Offset().x + animation->Size().x * static_cast<int>(aState.currentFrame),
+                        animation->Offset().x + animation->Size().x * (static_cast<int>(aState.currentFrame) + (aState.isReflected ? 1 : 0)),
                         animation->Offset().y
                     },
                     {
-                        animation->Size().x,
+                        (aState.isReflected ? -1 : 1) * animation->Size().x,
                         animation->Size().y
                     }
                 }

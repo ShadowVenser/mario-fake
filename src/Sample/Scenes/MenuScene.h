@@ -5,7 +5,7 @@
 class MenuScene final: public Scene 
 {
 private:
-
+    bool _visible = true;
 public:
     MenuScene(GameEngine& engine);
 

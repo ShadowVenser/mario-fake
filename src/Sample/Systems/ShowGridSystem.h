@@ -12,15 +12,16 @@ class ShowGridSystem final : public ISystem {
 private:
     ComponentStorage<CameraComponent>& _cameraStorage;
     GameEngine& _engine;
-    bool _isShown = true;
+    bool& _isShown;
 
     void DrawLine(const sf::Vector2f &p1, const sf::Vector2f &p2);
 
 public:
-    ShowGridSystem(World &world, GameEngine& engine): 
+    ShowGridSystem(World &world, GameEngine& engine, bool& isShown): 
         ISystem(world),
         _cameraStorage(world.GetStorage<CameraComponent>()),
-        _engine(engine)
+        _engine(engine),
+        _isShown(isShown)
     {}
 
     void OnInit() override { }

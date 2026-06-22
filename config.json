@@ -53,24 +53,41 @@
             "Entities":
             {
                 "Player": {
+                    "Animations":
+                    {
+                        "Idle": "RinIdle",
+                        "Move": "RinMove",
+                        "JumpGU" : "RinJumpGU",
+                        "JumpAU" : "RinJumpAU",
+                        "JumpAS" : "RinJumpAS",
+                        "JumpAD" : "RinJumpAD",
+                        "Shoot" : "RinShoot",
+                        "JumpGD" : "RinJumpGD"
+                    },
                     "PlayerComponent":{},
-                    "BaseSpeed": {
+                    "BaseSpeed": 
+                    {
                         "MoveSpeed": 3.0,
                         "JumpInitial": 8.0
                     },
-                    "MovementComponent":{
+                    "MovementComponent":
+                    {
                         "MaxSpeed": 8.0
                     },
                     "Gravity": 12.0,
-                    "Texture" : "question",
-                    "Collider" : {
-                        "Width": 63,
-                        "Height": 63
+                    "Collider" : 
+                    {
+                        "Width": 34,
+                        "Height": 62
                     }
                 },
                 "Bullet" : {
-                    "Texture" : "tile",
-                    "Collider" : {},
+                    "Animation" : "Bullet",
+                    "Collider" : 
+                    {
+                        "Width": 20,
+                        "Height": 12
+                    },
                     "MovementComponent" : {
                         "XSpeed" : 10.0, 
                         "YSpeed" : 0.0
@@ -80,7 +97,9 @@
                 },
                 "Brick" : {
                     "Texture" : "brick",
-                    "Collider" : {}
+                    "Collider" : {},
+                    "Breackable": true,
+                    "Idle": "BrickD"
                 },
                 "Tile" : {
                     "Texture" : "tile",

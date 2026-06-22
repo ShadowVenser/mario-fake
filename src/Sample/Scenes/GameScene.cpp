@@ -16,6 +16,11 @@
 #include "../Systems/AdditionalControlSystem.h"
 #include "../Systems/CameraFollowXSystem.h"
 #include "../Systems/PauseSystem.h"
+#include "../Systems/AnimationSystem.h"
+#include "../Systems/BrickDestructionSystem.h"
+#include "../Systems/RinStatesSystem.h"
+#include "../Systems/ShowCollidersSystem.h"
+#include "../Systems/GuiSystem.h"
 
 #include "../Systems/DrawSystem.h"
 #include "../Systems/KillerSystem.h"
@@ -39,7 +44,7 @@ GameScene::GameScene(GameEngine& engine):
     float tileSize = static_cast<float>(gameCfg["Grid"]["TileSize"].get<unsigned int>());
     float bulletSpeedX = gameCfg["Entities"]["Bullet"]["MovementComponent"]["XSpeed"].get<float>() * tileSize;
     float bulletSpeedY = gameCfg["Entities"]["Bullet"]["MovementComponent"]["YSpeed"].get<float>() * tileSize;
-    auto bulletSprite = std::make_shared<sf::Sprite>(*engine.Assets().GetTexture(gameCfg["Entities"]["Bullet"]["Texture"].get<std::string>()));   
+    // auto bulletSprite = std::make_shared<sf::Sprite>(*engine.Assets().GetTexture(gameCfg["Entities"]["Bullet"]["Texture"].get<std::string>()));   
     float heightOffset = static_cast<float>(gameCfg["Entities"]["Bullet"]["SpawnHeightOffset"].get<int>());
     float cooldown = gameCfg["Entities"]["Bullet"]["Cooldown"].get<float>();
     // ваще говоря у системы есть инициализатор, и по-хорошему это туда запихать, но я уже сделал так
@@ -51,14 +56,27 @@ GameScene::GameScene(GameEngine& engine):
 
     basicSystemManager.AddSystem(std::make_shared<AdditionalControlSystem>(world, engine, actionMap, _onPause, pauseCd)); // ничего не требует и дропает сцену
 
-    pausableSystemManager.AddSystem(std::make_shared<ShootingSystem>(world, actionMap, bulletSpeedX, bulletSpeedY, bulletSprite, heightOffset, cooldown));
+    pausableSystemManager.AddSystem(std::make_shared<RinStatesSystems>(world, engine, actionMap));
+    pausableSystemManager.AddSystem(std::make_shared<ShootingSystem>(
+        world, 
+        engine, 
+        actionMap, 
+        bulletSpeedX, 
+        bulletSpeedY, 
+        heightOffset, 
+        cooldown
+    ));
 
     pausableSystemManager.AddSystem(std::make_shared<MoveInputSystem>(world, actionMap));
     pausableSystemManager.AddSystem(std::make_shared<CameraFollowXSystem>(world, cameraSpeedCoef, cameraSlowdownCoef));  
+
+    pausableSystemManager.AddSystem(std::make_shared<AnimationSystem>(world));
+
     pausableSystemManager.AddSystem(std::make_shared<FallingSystem>(world));                     // после пользовательского ввода
     pausableSystemManager.AddSystem(std::make_shared<ColliderSystem>(world, tileSize));             // строго до MoveSystem и после ввода всех передвижений
     pausableSystemManager.AddSystem(std::make_shared<MoveSystem>(world));
 
+    pausableSystemManager.AddSystem(std::make_shared<BrickDestructionSystem>(world, engine));
     pausableSystemManager.AddSystem(std::make_shared<FinishSystem>(world, engine));          // после коллайдера
     pausableSystemManager.AddSystem(std::make_shared<BulletDeleteSystem>(world));          // после коллайдера
 
@@ -66,10 +84,12 @@ GameScene::GameScene(GameEngine& engine):
     pausableSystemManager.AddSystem(std::make_shared<RespawnSystem>(world, engine));    // прямо перед killerSystem
     pausableSystemManager.AddSystem(std::make_shared<KillerSystem>(world));
 
-    graphicsSystemManager.AddSystem(std::make_shared<DrawSystem>(world, engine));
-    graphicsSystemManager.AddSystem(std::make_shared<ShowGridSystem>(world, engine));  
+    graphicsSystemManager.AddSystem(std::make_shared<DrawSystem>(world, engine, _isDrawShown));
+    graphicsSystemManager.AddSystem(std::make_shared<ShowGridSystem>(world, engine, _isGridShown));  
+    graphicsSystemManager.AddSystem(std::make_shared<ShowCollidersSystem>(world, engine, _isBoxShown));
     
     graphicsSystemManager.AddSystem(std::make_shared<PauseSystem>(world, engine, _onPause));   
+    graphicsSystemManager.AddSystem(std::make_shared<GuiSystem>(world, engine, _isDrawShown, _isGridShown, _isBoxShown));
 }
 
 void GameScene::Init()

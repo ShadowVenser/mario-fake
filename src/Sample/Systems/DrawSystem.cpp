@@ -16,28 +16,31 @@ void DrawSystem::OnUpdate(float)
         default:
             _engine.Window().setView(_engine.Window().getDefaultView());
     }
-    
-    for (auto& id: _spritesStorage.Entities())
-    {
-        if (!world.IsEntityAlive(id))
-            continue;
-        auto sprite = _spritesStorage.Get(id).sprite;
-        sprite->setPosition(_posStorage.Get(id).pos);
-        _engine.Window().draw(*sprite);
-    }
 
-    for (auto& id: _textsStorage.Entities())
+    if (_isShown)
     {
-        if (!world.IsEntityAlive(id))
-            continue;
-        auto& textProps = _textsStorage.Get(id);
-        sf::Text txt {
-            *_engine.Assets().GetFont(textProps.fontName),
-            textProps.text,
-            textProps.size
-        };
-        txt.setOrigin({0.5f * txt.getLocalBounds().size.x, 0.5f * txt.getLocalBounds().size.y});
-        txt.setPosition(_posStorage.Get(id).pos);
-        _engine.Window().draw(txt);
+        for (auto& id: _spritesStorage.Entities())
+        {
+            if (!world.IsEntityAlive(id))
+                continue;
+            auto sprite = _spritesStorage.Get(id).sprite;
+            sprite->setPosition(_posStorage.Get(id).pos);
+            _engine.Window().draw(*sprite);
+        }
+
+        for (auto& id: _textsStorage.Entities())
+        {
+            if (!world.IsEntityAlive(id))
+                continue;
+            auto& textProps = _textsStorage.Get(id);
+            sf::Text txt {
+                *_engine.Assets().GetFont(textProps.fontName),
+                textProps.text,
+                textProps.size
+            };
+            txt.setOrigin({0.5f * txt.getLocalBounds().size.x, 0.5f * txt.getLocalBounds().size.y});
+            txt.setPosition(_posStorage.Get(id).pos);
+            _engine.Window().draw(txt);
+        }
     }
 }

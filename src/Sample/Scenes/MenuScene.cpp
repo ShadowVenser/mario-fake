@@ -22,7 +22,7 @@ void MenuScene::Init()
 
     systemsManager.AddSystem(std::make_shared<ButtonStateSystem>(world, actionMap));
     systemsManager.AddSystem(std::make_shared<AnimationSystem>(world));
-    systemsManager.AddSystem(std::make_shared<DrawSystem>(world, gameEngine));
+    systemsManager.AddSystem(std::make_shared<DrawSystem>(world, gameEngine, _visible));
     systemsManager.AddSystem(std::make_shared<KillerSystem>(world));
 
     systemsManager.Initialize();

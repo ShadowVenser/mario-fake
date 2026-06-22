@@ -17,14 +17,17 @@ private:
     ComponentStorage<TextComponent>& _textsStorage;
     GameEngine& _engine;
 
+    bool& _isShown;
+
 public:
-    DrawSystem(World &world, GameEngine& engine): 
+    DrawSystem(World &world, GameEngine& engine, bool& isShown): 
         ISystem(world),
         _cameraStorage(world.GetStorage<CameraComponent>()),
         _posStorage(world.GetStorage<PositionComponent>()),
         _spritesStorage(world.GetStorage<SpriteComponent>()),
         _textsStorage(world.GetStorage<TextComponent>()),
-        _engine(engine)
+        _engine(engine),
+        _isShown(isShown)
     {}
 
     void OnInit() override { }
