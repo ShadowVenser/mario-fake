@@ -81,9 +81,9 @@ bool AssetManager::LoadFromFile(const std::string &path)
 
     if (aInfo.contains("Music"))
     {
-        for (const auto& MusicInfo: aInfo["SoundEffects"])
+        for (const auto& MusicInfo: aInfo["Music"])
         {
-            AddSound
+            AddMusic
             (
                 MusicInfo.at("name").get<std::string>(),
                 MusicInfo.at("path").get<std::string>()
@@ -203,7 +203,7 @@ bool AssetManager::AddMusic
         return false;
     }
     
-    _music.insert({name, sf::Music(path)});
+    _music.insert({name, path});
 
     return true;
 }
@@ -229,14 +229,14 @@ const sf::Font* AssetManager::GetFont(const std::string &name) const
     return nullptr;
 }
 
-const sf::Sound AssetManager::GetSound(const std::string &name) const
-{
+const sf::SoundBuffer* AssetManager::GetSound(const std::string &name) const
+{   
     if (auto it = _sounds.find(name); it != _sounds.end())
-        return sf::Sound(it->second);
-    return sf::Sound(emptySoundBuffer);
+        return &it->second;
+    return &emptySoundBuffer;
 }
 
-const sf::Music* AssetManager::GetMusic(const std::string &name) const
+const std::string* AssetManager::GetMusic(const std::string &name) const
 {
     if (auto it = _music.find(name); it != _music.end())
         return &it->second;

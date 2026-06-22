@@ -111,7 +111,8 @@
             "Camera": {
                 "SpeedCoef" : 13.0,
                 "SlowDownCoef" : 0.90
-            }
+            },
+            "GameMusic": "hello"
             
         }
     }

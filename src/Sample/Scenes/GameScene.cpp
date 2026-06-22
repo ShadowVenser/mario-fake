@@ -54,7 +54,7 @@ GameScene::GameScene(GameEngine& engine): Scene(engine)
     systemsManager.AddSystem(std::make_shared<RespawnSystem>(world, engine));    // прямо перед killerSystem
 
     
-    systemsManager.AddSystem(std::make_shared<SoundSystem>(world, engine.Assets().GetSounds(), engine.Assets().GetMusic("hello"))); 
+    systemsManager.AddSystem(std::make_shared<SoundSystem>(world, engine.Assets(), gameCfg["GameMusic"].get<std::string>())); 
 
     systemsManager.AddSystem(std::make_shared<DrawSystem>(world, engine));
     systemsManager.AddSystem(std::make_shared<ShowGridSystem>(world, engine));       // должна быть после draw, чтобы рисовать поверх

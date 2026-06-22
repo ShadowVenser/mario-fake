@@ -19,7 +19,7 @@ class AssetManager {
     
     std::unordered_map<std::string, sf::SoundBuffer> _sounds;
     
-    std::unordered_map<std::string, sf::Music> _music;
+    std::unordered_map<std::string, std::string> _music;
 
     sf::SoundBuffer emptySoundBuffer = {};
 
@@ -47,8 +47,8 @@ public:
     const sf::Texture* GetTexture(const std::string& name) const;
     const Animation* GetAnimation(const std::string& name) const;
     const sf::Font* GetFont(const std::string& name) const;
-    const sf::Sound GetSound(const std::string& name) const;
-    const sf::Music* GetMusic(const std::string& name) const;
+    const sf::SoundBuffer* GetSound(const std::string& name) const;
+    const std::string* GetMusic(const std::string& name) const;
 
     const std::unordered_map<std::string, sf::Texture>& GetTextures() const { return _textures; }
     const std::unordered_map<std::string, Animation>& GetAnimations() const { return _animations; }

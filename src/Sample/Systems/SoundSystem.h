@@ -3,28 +3,30 @@
 #include "../../Ecs/Systems/ISystem.h"
 
 #include "../../Ecs/Components/ComponentStorage.hpp"
-#include <SFML/Audio.hpp>
 
+#include "../../GameEngine/Assets/AssetManager.h"
 #include "../Components/SoundEventComponent.h"
 
 class SoundSystem final : public ISystem {
     ComponentStorage<SoundEventComponent>& _eventStorage;
-    const std::unordered_map<std::string, sf::SoundBuffer>& _sounds;
     std::unordered_set<std::shared_ptr<sf::Sound>> _activeSounds = {};
-    sf::Music& _music;
+    std::shared_ptr<sf::Music> _music;
+    const AssetManager& _assets;
 
 public:
-    SoundSystem(World &world, const std::unordered_map<std::string, sf::SoundBuffer>& sounds, sf::Music& music)
+    SoundSystem(World &world, const AssetManager& assets, std::string music)
         : ISystem(world),
             _eventStorage(world.GetStorage<SoundEventComponent>()),
-            _sounds(sounds),
-            _music(music)
+            _assets(assets)
     {
-        _music.setLooping(true);
-        _music.play();
+        if (assets.GetMusic(music) != 0){
+            _music = std::make_shared<sf::Music>(*assets.GetMusic(music));
+            _music->setLooping(true);
+            _music->play();
+        }
     }
 
-    void OnInit() override;
+    void OnInit() override {}
 
     void OnUpdate(float) override;
 };
